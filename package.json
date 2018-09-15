@@ -17,7 +17,7 @@
     "tap-spec": "^5.0.0",
     "tape": "^4.9.0"
   },
-  "homepage": "https://github.com/smallwins/begin-data",
+  "homepage": "https://begin.com",
   "repository": {
     "type" : "git",
     "url" : "https://github.com/smallwins/begin-data.git"
