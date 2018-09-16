@@ -1,6 +1,6 @@
 # Begin Data
 
-[ ![Codeship Status for smallwins/begin-data](https://app.codeship.com/projects/1f33e4b0-21ac-0136-c2d9-3a7e7af3da57/status?branch=master)](https://app.codeship.com/projects/285941)
+[ ![Codeship Status for smallwins/begin-data](https://app.codeship.com/projects/54207a80-9b6b-0136-cc78-3a6df96c6020/status?branch=master)](https://app.codeship.com/projects/305743)
 
 Begin Data is a durable and fast key/value store for Begin built on top of DynamoDB. Its storage/access patterns are quite simple, and similar to Redis.
 
