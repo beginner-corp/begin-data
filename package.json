@@ -4,6 +4,7 @@
   "description": "Begin Data is a durable and fast key/value store for Begin built on top of DynamoDB.",
   "main": "src/client/index.js",
   "scripts": {
+    "lint": "eslint src --ignore-pattern node_modules --fix",
     "test": "NODE_ENV=testing tape test/*test.js | tap-spec"
   },
   "license": "Apache-2.0",
@@ -13,14 +14,15 @@
   },
   "devDependencies": {
     "@architect/workflows": "^3.4.2",
+    "eslint": "^5.6.0",
     "run-parallel": "^1.1.9",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.0"
   },
   "homepage": "https://begin.com",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/smallwins/begin-data.git"
+    "type": "git",
+    "url": "https://github.com/smallwins/begin-data.git"
   },
   "bugs": {
     "url": "https://github.com/smallwins/begin-issues/issues"

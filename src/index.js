@@ -35,10 +35,10 @@ module.exports = {
     }
     else if (offline && params.ns && params.key) {
       var v = offline[params.ns].find(a=> a.key === params.key)
-      callback(null, v) 
+      callback(null, v)
     }
     else if (offline && params.ns) {
-      callback(null, {docs: offline[params.ns]}) 
+      callback(null, {docs: offline[params.ns]})
     }
     else if (offline) {
       callback(null, {namespaces: Object.keys(offline)})
@@ -64,16 +64,16 @@ module.exports = {
    *
    */
   set(params, callback) {
-    
+
     var isBatch = Array.isArray(params)
-    
+
     if (!params.ns && !isBatch) {
       throw ReferenceError('missing ns')
     }
 
     if (isBatch) {
       var badNs = params.filter(p=> !p.hasOwnProperty('ns')).length > 0
-      if (badNs) 
+      if (badNs)
         throw ReferenceError('batch set element is missing ns')
     }
 
@@ -92,7 +92,7 @@ module.exports = {
         var ns = copy.ns
         var key = copy.key
         // create the ns if it does not exist
-        if (!offline[ns]) 
+        if (!offline[ns])
           offline[ns] = []
         // create the key if it does not exist
         if (!key)
@@ -115,19 +115,19 @@ module.exports = {
 
   /**
    * delete document(s)
-   * 
+   *
    * params
    *
    * - ns (required)
    * - key (required)
    *
    *   or
-   *   
+   *
    * - an array of [{ns, key}, {ns, key}]
    *
    */
   del(params, callback) {
-    // validate 
+    // validate
     if (Array.isArray(params)) {
       var badNs = params.filter(p=> !p.hasOwnProperty('ns')).length > 0
       var badKey = params.filter(p=> !p.hasOwnProperty('key')).length > 0
@@ -168,7 +168,7 @@ module.exports = {
   incr(params, callback) {
     if (!params.key)
       throw ReferenceError('key required')
-    if (!params.ns) 
+    if (!params.ns)
       throw ReferenceError('ns required')
     var promise
     if (!callback) {
@@ -190,9 +190,9 @@ module.exports = {
       if (!doc)
         doc = {ns, key}
       // zero default
-      if (!doc.hasOwnProperty(attr)) 
+      if (!doc.hasOwnProperty(attr))
         doc[attr] = 0
-      
+
       // incr, finally
       doc[attr] += 1
       // filter out old record
@@ -213,7 +213,7 @@ module.exports = {
   decr(params, callback) {
      if (!params.key)
       throw ReferenceError('key required')
-    if (!params.ns) 
+    if (!params.ns)
       throw ReferenceError('ns required')
     var promise
     if (!callback) {
@@ -235,9 +235,9 @@ module.exports = {
       if (!doc)
         doc = {ns, key}
       // zero default
-      if (!doc.hasOwnProperty(attr)) 
+      if (!doc.hasOwnProperty(attr))
         doc[attr] = 0
-      
+
       // incr, finally
       doc[attr] -= 1
       // filter out old record
