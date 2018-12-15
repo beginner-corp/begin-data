@@ -13,6 +13,7 @@
     "tiny-json-http": "^7.0.0"
   },
   "devDependencies": {
+    "@architect/architect": "^4.4.9",
     "@architect/workflows": "^3.4.2",
     "eslint": "^5.6.0",
     "run-parallel": "^1.1.9",
