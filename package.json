@@ -5,10 +5,11 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src --ignore-pattern node_modules --fix",
-    "test": "NODE_ENV=testing tape test/*test.js | tap-spec"
+    "test": "ARC_LOCAL=true NODE_ENV=testing tape test.js | tap-spec"
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "@architect/data": "^2.0.9",
     "hashids": "^1.1.4",
     "tiny-json-http": "^7.0.0"
   },

@@ -1,7 +1,7 @@
 @app
-test-data
+begin
 
 @tables
-begin-data
+collections
   table *String
   key **String
