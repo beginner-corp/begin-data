@@ -2,153 +2,125 @@
 
 [ ![Codeship Status for smallwins/begin-data](https://app.codeship.com/projects/54207a80-9b6b-0136-cc78-3a6df96c6020/status?branch=master)](https://app.codeship.com/projects/305743)
 
-Begin Data is a durable and fast key/value store for Begin built on top of DynamoDB. Its storage/access patterns are quite simple, and similar to Redis.
+Begin Data is a durable and fast key/value store built on top of DynamoDB with super simple storage/access patterns that are similar to Redis.
 
+## Concepts
 
-### Considerations
-
-- A document is maximum 100KB
-- Paginated reads return 1MB per page 
-- namespaces are unique to an app
-- keys are unique to a namespace
-- namespaces and keys must start with a letter
-- namespaces and keys can only contain lowercase characters, numbers, dashes, and colons
-- namespaces and keys must be minimum 1 character and max 255 characters
-
-
-## Data Types
-
-Namespaces contain documents. Documents stored in Begin Data always have the following keys:
-
-- `ns` which references the document namespace 
-- `key` which is a unique identifier within a namespace
-
-Optionally a document can also have a `ttl` key with a UNIX epoch value representing the expiry time for the document.
-
-> Every namespace also has a reserved key `_count` which is used for generating unique keys within the namespace
-
+Begin Data organizes itself into tables. Tables contain items which are just collections of plain `Object`s. Items stored in Begin Data always have the properties `table` and `key`. Optionally an item can also have a `ttl` property with a UNIX epoch value representing the expiry time for the item.
 
 ### API
 
-Grab a Begin Data client named `data`.
-
 ```javascript
-let data = require('@begin-functions/data')
+let data = require('@begin/data')
 ```
 
+The core API is three methods:
+
+- `data.get(params, [callback])` for retreiving data
+- `data.set(params, [callback])` for writing data 
+- `data.destroy(params, [callback])` for removing data
+
+Additional helper methods are also made available:
+
+- `data.incr(params, [callback])` increment an attribute on an item
+- `data.decr(params, [callback])` decrement an attribute on an item
+- `data.count(params, [callback])` get the number of items for a given table
+
+All methods require a params object and, optionally, a Node style errback. If no errback is supplied a promise is returned. All methods support `async`/`await`.
 
 #### Writes
 
-Save a document in a namespace by key. Remember `ns` is always required.
+Save an item in a table by key. Remember `table` is always required.
 
 ```javascript
-data.set({
-  ns: 'tacos', 
+let taco = await data.set({
+  table: 'tacos', 
   key: 'al-pastor'
-}, console.log)
+})
 ```
 
-`key` is optional. But all documents have a key. If no key is given `set` will generate a `key` unique to the namespace. 
+`key` is optional. But all items have a key. If no key is given `set` will generate a unique `key`. 
 
 ```javascript
-data.set({
-  ns: 'tacos', 
-}, console.log)
+let token = data.set({
+  table: 'tokens', 
+})
+// {table:'tokens', key:'s89sdfjskfdj'}
 ```
 
 Batch save multiple documents at once by passing an array of objects.
 
 ```javascript
-data.set([
-  {ns: 'ppl', name:'brian', email:'b@brian.io'},
-  {ns: 'ppl', name:'sutr0', email:'sutr0@brian.io'},
-  {ns: 'tacos', key:'pollo'},
-  {ns: 'tacos', key:'carnitas'},
-], console.log)
+let collection = await data.set([
+  {table: 'ppl', name:'brian', email:'b@brian.io'},
+  {table: 'ppl', name:'sutr0', email:'sutr0@brian.io'},
+  {table: 'tacos', key:'pollo'},
+  {table: 'tacos', key:'carnitas'},
+])
 ```
-
 
 #### Reads
 
-Read a document by key.
+Read an item by key:
 
 ```javascript
-data.get({
-  ns: 'tacos', 
-  key: 'al-pastor'
-}, console.log)
+let yum = await data.get({
+  table: 'tacos', 
+  key: 'baja'
+})
 ```
 
-Or paginate an entire namespace.
+Batch read by passing an array of objects. With these building blocks you can construct secondary indexes and joins like one-to-many and many-to-many.
 
 ```javascript
-// define a read function
-function read(cursor) {
+await data.get([
+  {table:'tacos', key:'carnitas'},
+  {table:'tacos', key:'al-pastor'},
+])
+```
 
-  var uery = {ns: 'tacos'}
+Or scan an entire table.
 
-  // if we have a cursor add it to the query
-  if (cursor) {
-    query.cursor = cursor
-  }
-
-  // read the namespace
-  data.get(query, function _get(err, page) {
-    
-    // bubble any errors
-    if (err) throw err
-    
-    // log the docs
-    console.log(page.docs)
-
-    // continue reading if there's another page
-    if (page.cursor) {
-      read(cursor)
-    }
-  })
+```javascript
+let users = data.get({table:'users'})
+for await (let user of users()) {
+  console.log(user) 
 }
-
-// start reading..
-read()
 ```
 
-Batch read by passing an array of objects. With these building blocks you can construct secondary indexesand joins like one-to-many and many-to-many.
+If you want to paginate pass a limit:
 
 ```javascript
-data.get([
-  {ns:'tacos', key:'carnitas'},
-  {ns:'tacos', key:'al-pastor'},
-], console.log)
+let users = data.get({table:'users', limit:10})
+for await (let page of users()) {
+  console.log(page) // array of 10 users 
+}
 ```
 
+#### Destroy
 
-#### Deletes
-
-Delete a document by key.
+Delete an item by key.
 
 ```javascript
-data.del({
-  ns: 'tacos', 
+await data.destroy({
+  table: 'tacos', 
   key: 'pollo'
-}, console.log)
+})
 ```
 
-Batch delete documents by passinng an array of objects.
+Batch delete items by passing an array of objects.
 
 ```javascript
-data.del([
-  {ns:'tacos', key:'carnitas'},
-  {ns:'tacos', key:'al-pastor'},
-], console.log)
-
+await data.destroy([
+  {table:'tacos', key:'carnitas'},
+  {table:'tacos', key:'al-pastor'},
+])
 ```
-
 
 ## Additional Superpowers
 
 - Documents can be expired by setting `ttl` to an UNIX epoch in the future.
 - Atomic counters: `data.incr` and `data.decr`
-
 
 ## Patterns
 
@@ -157,7 +129,6 @@ Coming soon! Detailed guides for various data persistence tasks:
 - denormalizing
 - pagination
 - counters
-- hashids
 - secondary indexes
 - one to many
 - many to many

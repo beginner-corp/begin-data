@@ -1,7 +1,10 @@
-let data = require('@architect/data')
-let Hashids = require('hashids')
-let hashids = new Hashids
+let doc = require('@architect/data')._doc
+let getKey = require('./_get-key')
+let getTableName = require('./_get-table-name')
 
+/**
+ * get item count for given table
+ */
 module.exports = function count({table}, callback) {
   if (!table)
     throw ReferenceError('missing params.table')
@@ -13,19 +16,21 @@ module.exports = function count({table}, callback) {
       }
     })
   }
-  let env = process.env.NODE_ENV === 'testing'? 'staging' : process.env.NODE_ENV
-  let TableName = `begin-${env}-collections`
-  data._doc.query({
-    TableName,
+  let {scopeID, dataID} = getKey({table, key:'UNKNOWN'})
+  //console.log({scopeID, dataID})
+  doc.query({
+    TableName: getTableName(),
     Select: 'COUNT',
-    KeyConditionExpression: '#table = :table',
+    KeyConditionExpression: '#scopeID = :scopeID and begins_with(#dataID, :dataID)',
     ExpressionAttributeNames: {
-      '#table': 'table'
+      '#scopeID': 'scopeID',
+      '#dataID': 'dataID'
     },
     ExpressionAttributeValues: {
-      ':table': table 
+      ':scopeID': scopeID,
+      ':dataID': dataID.replace('#UNKNOWN', ''),
     }
-  }, 
+  },
   function _query(err, result) {
     if (err) callback(err)
     else {

@@ -23,8 +23,6 @@ module.exports = {
   },
   // known to throw warnings
   "parserOptions":{
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
+    "ecmaVersion": 2018
   }
 }                      
