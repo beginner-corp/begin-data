@@ -1,5 +1,5 @@
 @app
-begin
+begin-data
 
 @tables
 data
