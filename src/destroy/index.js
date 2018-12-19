@@ -3,7 +3,7 @@ let batch = require('./batch')
 
 module.exports = function destroy(params, callback) {
   if (!params)
-    throw ReferenceError('missing params in arguments')
+    throw ReferenceError('Missing params in arguments')
 
   // backfill the async adventure du jour
   let promise

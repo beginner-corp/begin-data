@@ -13,9 +13,9 @@ module.exports = {incr, decr}
 function atomic(isIncr, params, callback) {
 
   let {table, key, prop} = params
-  if (!table) throw ReferenceError('missing param: table')
-  if (!key) throw ReferenceError('missing param: key')
-  if (!prop) throw ReferenceError('missing param: prop')
+  if (!table) throw ReferenceError('Missing param: table')
+  if (!key) throw ReferenceError('Missing param: key')
+  if (!prop) throw ReferenceError('Missing param: prop')
 
   // backfill the async adventure du jour
   let promise

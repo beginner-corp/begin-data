@@ -7,7 +7,7 @@ let getTableName = require('./_get-table-name')
  */
 module.exports = function count({table}, callback) {
   if (!table)
-    throw ReferenceError('missing params.table')
+    throw ReferenceError('Missing params.table')
   let promise
   if (!callback) {
     promise = new Promise(function(res, rej) {

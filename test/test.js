@@ -45,15 +45,15 @@ test('set/get/count', async t=> {
   console.log(taco)
 
   let count = await data.count({table})
-  t.ok(count === 1, 'count of one')
-  console.log(count)
+  t.ok(count === 1, 'item count of one')
+  console.log('data.count ===', count)
 })
 
 
 /**
- * item max size: 10kb
+ * item max size: 10KB
  */
-test('10kb', async t=> {
+test('Size limit test', async t=> {
   t.plan(1)
   let doc = require('./mock.json')
   try {
@@ -66,24 +66,24 @@ test('10kb', async t=> {
 
 
 /**
- * destroy a key
+ * destroy an item via key
  */
 test('destroy', async t=> {
   t.plan(2)
 
   let junk = await data.set({table:'junk', noop:true})
-  t.ok(junk.hasOwnProperty('key'), 'has key')
+  t.ok(junk.hasOwnProperty('key'), 'table now has a key')
 
   await data.destroy(junk)
   let count = await data.count({table:'junk'})
-  t.ok(count === 0, 'nuked')
+  t.ok(count === 0, 'item destroyed')
 })
 
 
 /**
- * batch write a bunch of data
+ * batch write a bunch of items
  */
-test('batch set', async t=> {
+test('batch set (across multiple tables)', async t=> {
   t.plan(2)
 
   let result = await data.set([
@@ -100,8 +100,9 @@ test('batch set', async t=> {
   t.ok(tacos === 3, 'three tacos saved')
 })
 
+
 /** 
- * limit batch to 25 records (we can expand this to stream in the future)
+ * limit batch to 25 items (we can expand this to stream in the future)
  */
 test('set batch max exceeded', async t=> {
   t.plan(1)
@@ -118,7 +119,6 @@ test('set batch max exceeded', async t=> {
     t.ok(true, e.message)
   }
 })
-
 
 
 /**
@@ -156,7 +156,9 @@ test('batch get', async t=> {
   console.log(result)
 })
 
+
 /**
+ * incr/decr an item
  */
 test('incr/decr', async t=> {
   t.plan(2)
@@ -178,6 +180,10 @@ test('incr/decr', async t=> {
   t.ok(minuses.mycount === 0, 'and done')
 })
 
+
+/**
+ * cursor pagination
+ */
 test('node8.10 cursor style pagination', async t=> {
   t.plan(4)
 
@@ -208,6 +214,10 @@ test('node8.10 cursor style pagination', async t=> {
   t.ok(typeof result2.cursor === 'undefined', 'and no cursor')
 })
 
+
+/**
+ * scanning items
+ */
 test('implementing a scan', t=> {
   t.plan(1)
 
@@ -243,9 +253,10 @@ test('implementing a scan', t=> {
   scan({table, limit}, function done(err, ppl) {
     if (err) throw err
     t.ok(true, 'done')
-    console.log(ppl.length)
+    console.log('total ppl', ppl.length)
   })
 })
+
 
 // * node10 pagination will have to wait for a lambda upgrade!
 // we could start mocking this in with a generator but the syntax is ugly in node8.10
@@ -269,12 +280,14 @@ test('implementing a scan', t=> {
 //  }
 //})
 
+
 // fin
 test('shutdown sandbox', t=> {
   t.plan(1)
   end()
   t.ok(true, 'done')
 })
+
 
 // ensure clean exit even on hanging async work
 process.on('unhandledRejection', (reason, p) => {

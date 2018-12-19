@@ -26,6 +26,6 @@ module.exports = function get(params, callback) {
     return page(params, callback)
   }
   else {
-    throw ReferenceError('invalid args; expected [{table, key}], {table, key} or {table}')
+    throw ReferenceError('Invalid args; expected [{table, key}], {table, key} or {table}')
   }
 }

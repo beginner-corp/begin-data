@@ -7,7 +7,7 @@ let one = require('./one')
 module.exports = function set(params, callback) {
 
   if (!params)
-    throw ReferenceError('missing params')
+    throw ReferenceError('Missing params')
 
   // backfill the async adventure du jour
   let promise

@@ -10,7 +10,7 @@ let validate = require('../_validate')
 module.exports = function batch(params, callback) {
 
   if (params.length > 25)
-    throw Error(`batch too large! max 25 (received ${params.length})`)
+    throw Error(`Batch too large; max 25, received ${params.length}`)
 
   validate.table(params)
   // TODO validate.key accept an array (ignoring items without keys)

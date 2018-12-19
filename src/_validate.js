@@ -12,7 +12,6 @@
  *
  * validate.key([key|items])
  * ---
- *
  * ensures the following:
  *
  * - between 1 and 50 characters
@@ -27,7 +26,7 @@
  * ---
  * ensures the following
  * - has a table and key
- * - is less than 10kb
+ * - is less than 10KB
  *
  */
 
@@ -43,59 +42,59 @@ module.exports = {
 
       let missingTable = t.some(i=> !i.hasOwnProperty('table'))
       if (missingTable)
-        throw ReferenceError('table is not defined')
+        throw ReferenceError('Table is not defined')
 
       let tooBig = t.some(i=> i.table.length > max)
       if (tooBig) {
         let name = t.find(i=> i.table.length > max).table
         let len = name.length
-        throw Error(`table name too big; max ${max} received ${len} for ${name}`)
+        throw Error(`Table name has too many characters; max ${max}, received ${len} for ${name}`)
       }
 
       let tooShort = t.some(i=> i.table.length < min)
       if (tooShort)
-        throw Error(`table name too small!`)
+        throw Error(`Table name is too small`)
 
       let invalidChars = t.some(i=> !ok(i.table))
       if (invalidChars) {
         let name = t.find(i=> !ok(i.table)).table
-        throw SyntaxError(`invalid table name ${name}: names must be alphanumeric and can use the only the  following url safe puncation .,:-/+?&=@`)
+        throw SyntaxError(`Invalid table name of ${name}: names must be alphanumeric and can use the only the following URL safe puncation: .,:-/+?&=@`)
       }
     }
     else {
       if (!t)
-        throw ReferenceError('table is not defined')
+        throw ReferenceError('Table is not defined')
 
       if (t.length > max)
-        throw Error(`table name too big; max ${max} received ${t.length} for ${t}`)
+        throw Error(`Table name has too many characters; max ${max}, received ${t.length} for ${t}`)
 
       if (t.length < min)
-        throw Error(`table name too small!`)
+        throw Error(`Table name is too small`)
 
       if (!ok(t))
-        throw SyntaxError(`invalid table name ${t}: names must be alphanumeric and can use the only the  following url safe puncation .,:-/+?&=@`)
+        throw SyntaxError(`Invalid table name of ${t}: names must be alphanumeric and can use the only the following URL safe puncation: .,:-/+?&=@`)
     }
   },
 
   key(k) {
     if (!k)
-      throw ReferenceError('key is not defined')
+      throw ReferenceError('Key is not defined')
 
     if (k.length > max)
-      throw Error(`key name too big; max ${max} received ${k.length}`)
+      throw Error(`Key name has too many characters; max ${max}, received ${k.length}`)
 
     if (k.length < min)
-      throw Error(`key name too small!`)
+      throw Error(`Key name is too small`)
 
     if (!ok(k))
-      throw SyntaxError('invalid key name: names must be alphanumeric and can use the only the  following url safe puncation .,:-/+?&=@')
+      throw SyntaxError(`Invalid key name of ${k}: names must be alphanumeric and can use the only the following URL safe puncation: .,:-/+?&=@`)
   },
 
   size(i) {
     let _size = i=> Buffer.byteLength(JSON.stringify(i)) > 10000
     let tooBig = Array.isArray(i)? i.some(_size) : _size(i)
     if (tooBig)
-      throw Error(`item too large; must be less than 10kb`)
+      throw Error(`Item too large; must be less than 10KB`)
   }
 }
 

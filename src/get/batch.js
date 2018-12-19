@@ -16,7 +16,7 @@ module.exports = function batch(Keys, callback) {
   }
   // fail fast
   if (Keys.some(badKey)) {
-    callback(Error('invalid params: all items must have table and key'))
+    callback(Error('Invalid params: all items must have table and key'))
   }
   else {
     let table = getTableName()
