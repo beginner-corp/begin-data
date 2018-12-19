@@ -5,23 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src --ignore-pattern node_modules --fix",
-    "test": "ARC_LOCAL=true NODE_ENV=testing tape test.js | tap-spec"
+    "test": "ARC_LOCAL=true NODE_ENV=testing tape test/test.js | tap-spec"
   },
   "license": "Apache-2.0",
-  "dependencies": {
-    "@architect/data": "^2.0.9",
-    "hashids": "^1.1.4",
-    "run-waterfall": "^1.1.6",
-    "tiny-json-http": "^7.0.0"
-  },
-  "devDependencies": {
-    "@architect/architect": "^4.4.9",
-    "@architect/workflows": "^3.4.2",
-    "eslint": "^5.10.0",
-    "run-parallel": "^1.1.9",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.9.0"
-  },
   "homepage": "https://begin.com",
   "repository": {
     "type": "git",
@@ -29,6 +15,19 @@
   },
   "bugs": {
     "url": "https://github.com/smallwins/begin-issues/issues"
+  },
+  "dependencies": {
+    "@architect/data": "^2.0.9",
+    "hashids": "^1.2.2",
+    "run-waterfall": "^1.1.6",
+    "tiny-json-http": "^7.0.2"
+  },
+  "devDependencies": {
+    "@architect/architect": "^4.4.10",
+    "eslint": "^5.10.0",
+    "run-parallel": "^1.1.9",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.9.1"
   },
   "keywords": [
     "serverless",

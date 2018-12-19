@@ -1,5 +1,5 @@
 let arc = require('@architect/architect')
-let data = require('.')
+let data = require('../.')
 let test = require('tape')
 
 
