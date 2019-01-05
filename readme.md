@@ -8,6 +8,23 @@ Begin Data is a durable and fast key/value store built on top of DynamoDB with s
 
 Begin Data organizes itself into tables. Tables contain documents which are just collections of plain `Object`s. documents stored in Begin Data always have the properties `table` and `key`. Optionally an document can also have a `ttl` property with a UNIX epoch value representing the expiry time for the document.
 
+## Usage
+
+Begin Data operates on one DynamoDB table named `data` with a partition key `scopeID` and a sort key of `dataID` and, optionally, a `ttl` for expiring documents. 
+
+Example `.arc`:
+
+```
+@app
+myapp
+
+@tables
+data
+  scopeID *String
+  dataID **String
+  ttl TTL
+```
+
 ### API
 
 ```javascript
@@ -26,7 +43,7 @@ Additional helper methods are also made available:
 - `data.decr(params, [callback])` decrement an attribute on an document
 - `data.count(params, [callback])` get the number of documents for a given table
 
-All methods require a params object and, optionally, a Node style errback. If no errback is supplied a promise is returned. All methods support `async`/`await`.
+All methods accept params object and, optionally, a Node style errback. If no errback is supplied a promise is returned. All methods support `async`/`await`.
 
 #### Writes
 

@@ -1,11 +1,11 @@
 {
   "name": "@begin/data",
   "version": "1.0.0",
-  "description": "Begin Data is a durable and fast key/value store for Begin built on top of DynamoDB.",
+  "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB.",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src --ignore-pattern node_modules --fix",
-    "test": "ARC_LOCAL=true NODE_ENV=testing tape test/test.js | tap-spec"
+    "test": "tape test/test.js | tap-spec"
   },
   "license": "Apache-2.0",
   "homepage": "https://begin.com",
@@ -17,13 +17,14 @@
     "url": "https://github.com/smallwins/begin-issues/issues"
   },
   "dependencies": {
+    "@architect/parser": "^1.1.6",
     "hashids": "^1.2.2",
+    "run-parallel": "^1.1.9",
     "run-waterfall": "^1.1.6"
   },
   "devDependencies": {
     "@architect/architect": "^4.4.10",
     "eslint": "^5.10.0",
-    "run-parallel": "^1.1.9",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.1"
   },
@@ -31,6 +32,8 @@
     "serverless",
     "database",
     "AWS",
+    "dynamodb",
+    "keyvalue",
     "infrastructure",
     "infra"
   ]

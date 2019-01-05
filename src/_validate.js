@@ -1,4 +1,7 @@
 /**
+ * @private
+ * @module validate
+ *
  * validate.table([table|items])
  * ---
  * ensures the following:
@@ -20,7 +23,6 @@
  *   - numeric: '0123456789',
  *   - puncuation: .,:-/+?&=@
  *  -
- *
  *
  * validate.size([item|items])
  * ---

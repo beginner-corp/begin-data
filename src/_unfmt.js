@@ -1,4 +1,8 @@
-module.exports = function(obj) {
+/**
+ * @private
+ * @module unfmt
+ */
+module.exports = function unfmt(obj) {
   let copy = {...obj}
   copy.key = obj.dataID.split('#')[2]
   copy.table = obj.dataID.split('#')[1]

@@ -1,3 +1,7 @@
+/**
+ * @private
+ * @module createKey
+ */
 let getTableName = require('./_get-table-name')
 let db = require('./_get-db')
 let Hashids = require('hashids')
