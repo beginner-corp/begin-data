@@ -1,7 +1,16 @@
-let doc = require('@architect/data')._doc
+/**
+ * @private
+ * @module destroy/batch
+ */
+let doc = require('../_get-doc')
 let getTableName = require('../_get-table-name')
 let getKey = require('../_get-key')
 
+/**
+ * Destroy an array of documents
+ * @param {array} params - The [{table, key}] of documents to destroy
+ * @param {callback} errback - Node style error first callback
+ */
 module.exports = function batch(params, callback) {
 
   // ensure we have tables and keys

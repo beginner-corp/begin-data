@@ -1,5 +1,5 @@
 let getTableName = require('./_get-table-name')
-let db = require('@architect/data')._db
+let db = require('./_get-db')
 let Hashids = require('hashids')
 let hash = new Hashids
 

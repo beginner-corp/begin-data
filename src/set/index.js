@@ -1,8 +1,14 @@
+/**
+ * @module set
+ */
 let batch = require('./batch')
 let one = require('./one')
 
 /**
- * set a key/value or batch set an array of key/values
+ * Write documents
+ * @param {array|object} params - Either {table}, {table, key} or [{table, key}] of document(s) to write
+ * @param {callback} errback - optional Node style error first callback
+ * @returns {promise} promise - if no callback is supplied a promise is returned
  */
 module.exports = function set(params, callback) {
 

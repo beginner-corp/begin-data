@@ -1,4 +1,4 @@
-let doc = require('@architect/data')._doc
+let doc = require('./_get-doc')
 let getTableName = require('./_get-table-name')
 let getKey = require('./_get-key')
 

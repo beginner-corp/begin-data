@@ -6,7 +6,7 @@ Begin Data is a durable and fast key/value store built on top of DynamoDB with s
 
 ## Concepts
 
-Begin Data organizes itself into tables. Tables contain items which are just collections of plain `Object`s. Items stored in Begin Data always have the properties `table` and `key`. Optionally an item can also have a `ttl` property with a UNIX epoch value representing the expiry time for the item.
+Begin Data organizes itself into tables. Tables contain documents which are just collections of plain `Object`s. documents stored in Begin Data always have the properties `table` and `key`. Optionally an document can also have a `ttl` property with a UNIX epoch value representing the expiry time for the document.
 
 ### API
 
@@ -22,15 +22,15 @@ The core API is three methods:
 
 Additional helper methods are also made available:
 
-- `data.incr(params, [callback])` increment an attribute on an item
-- `data.decr(params, [callback])` decrement an attribute on an item
-- `data.count(params, [callback])` get the number of items for a given table
+- `data.incr(params, [callback])` increment an attribute on an document
+- `data.decr(params, [callback])` decrement an attribute on an document
+- `data.count(params, [callback])` get the number of documents for a given table
 
 All methods require a params object and, optionally, a Node style errback. If no errback is supplied a promise is returned. All methods support `async`/`await`.
 
 #### Writes
 
-Save an item in a table by key. Remember `table` is always required.
+Save an document in a table by key. Remember `table` is always required.
 
 ```javascript
 let taco = await data.set({
@@ -39,10 +39,10 @@ let taco = await data.set({
 })
 ```
 
-`key` is optional. But all items have a key. If no key is given `set` will generate a unique `key`. 
+`key` is optional. But all documents have a key. If no key is given `set` will generate a unique `key`. 
 
 ```javascript
-let token = data.set({
+let token = await data.set({
   table: 'tokens', 
 })
 // {table:'tokens', key:'s89sdfjskfdj'}
@@ -61,7 +61,7 @@ let collection = await data.set([
 
 #### Reads
 
-Read an item by key:
+Read an document by key:
 
 ```javascript
 let yum = await data.get({
@@ -79,27 +79,9 @@ await data.get([
 ])
 ```
 
-Or scan an entire table.
-
-```javascript
-let users = data.get({table:'users'})
-for await (let user of users()) {
-  console.log(user) 
-}
-```
-
-If you want to paginate pass a limit:
-
-```javascript
-let users = data.get({table:'users', limit:10})
-for await (let page of users()) {
-  console.log(page) // array of 10 users 
-}
-```
-
 #### Destroy
 
-Delete an item by key.
+Delete an document by key.
 
 ```javascript
 await data.destroy({
@@ -108,7 +90,7 @@ await data.destroy({
 })
 ```
 
-Batch delete items by passing an array of objects.
+Batch delete documents by passing an array of objects.
 
 ```javascript
 await data.destroy([
@@ -121,6 +103,8 @@ await data.destroy([
 
 - Documents can be expired by setting `ttl` to an UNIX epoch in the future.
 - Atomic counters: `data.incr` and `data.decr`
+
+See the tests for more examples!
 
 ## Patterns
 

@@ -1,8 +1,17 @@
-let doc = require('@architect/data')._doc
+/**
+ * @private
+ * @module get/one
+ */
+let doc = require('../_get-doc')
 let getTableName = require('../_get-table-name')
 let getKey = require('../_get-key')
 let unfmt = require('../_unfmt')
 
+/**
+ * Read a document
+ * @param {object} params - The {table, key} of documents to read
+ * @param {callback} errback - Node style error first callback
+ */
 module.exports = function one(params, callback) {
   // boilerplague
   let promise

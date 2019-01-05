@@ -1,9 +1,15 @@
-let doc = require('@architect/data')._doc
+/**
+ * @module count
+ */
+let doc = require('./_get-doc')
 let getKey = require('./_get-key')
 let getTableName = require('./_get-table-name')
 
 /**
- * get item count for given table
+ * Get document count for given table
+ * @param {object} params - The {table} to get the count from
+ * @param {callback} errback - optional Node style error first callback
+ * @returns {promise} promise - if no callback is supplied a promise is returned
  */
 module.exports = function count({table}, callback) {
   if (!table)
@@ -17,7 +23,6 @@ module.exports = function count({table}, callback) {
     })
   }
   let {scopeID, dataID} = getKey({table, key:'UNKNOWN'})
-  //console.log({scopeID, dataID})
   doc.query({
     TableName: getTableName(),
     Select: 'COUNT',

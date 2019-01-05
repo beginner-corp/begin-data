@@ -1,4 +1,8 @@
-let doc = require('@architect/data')._doc
+/**
+ * @private
+ * @module set/one
+ */
+let doc = require('../_get-doc')
 let fmt = require('../_fmt')
 let unfmt = require('../_unfmt')
 let getTableName = require('../_get-table-name')
@@ -6,6 +10,11 @@ let waterfall = require('run-waterfall')
 let createKey = require('../_create-key')
 let validate = require('../_validate')
 
+/**
+ * Write a document
+ * @param {object} params - The document to write
+ * @param {callback} errback - Node style error first callback
+ */
 module.exports = function one(params, callback) {
   validate.table(params.table)
   if (params.key)

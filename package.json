@@ -17,10 +17,8 @@
     "url": "https://github.com/smallwins/begin-issues/issues"
   },
   "dependencies": {
-    "@architect/data": "^2.0.9",
     "hashids": "^1.2.2",
-    "run-waterfall": "^1.1.6",
-    "tiny-json-http": "^7.0.2"
+    "run-waterfall": "^1.1.6"
   },
   "devDependencies": {
     "@architect/architect": "^4.4.10",

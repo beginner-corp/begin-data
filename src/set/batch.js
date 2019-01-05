@@ -1,4 +1,8 @@
-let doc = require('@architect/data')._doc
+/**
+ * @private
+ * @module set/batch
+ */
+let doc = require('../_get-doc')
 let getTableName = require('../_get-table-name')
 let waterfall = require('run-waterfall')
 let parallel = require('run-parallel')
@@ -7,6 +11,11 @@ let fmt = require('../_fmt')
 let unfmt = require('../_unfmt')
 let validate = require('../_validate')
 
+/**
+ * Write an array of documents
+ * @param {array} params - The [{table, key}] of documents to write
+ * @param {callback} errback - Node style error first callback
+ */
 module.exports = function batch(params, callback) {
 
   if (params.length > 25)
