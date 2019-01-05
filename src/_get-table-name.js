@@ -28,7 +28,7 @@ module.exports = function getTableName() {
   let appDotArcPath = join(cwd, 'app.arc')
   let arcYamlPath = join(cwd, 'arc.yaml')
   let arcJsonPath = join(cwd, 'arc.json')
-  let localPath = join(__dirname, '..', 'shared', '.arc')
+  let localPath = join(__dirname, '..', '..', '..', '@architect', 'shared', '.arc')
 
   let override = process.env.hasOwnProperty('BEGIN_DATA_TABLE_NAME')
   if (override) {
