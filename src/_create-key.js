@@ -11,8 +11,8 @@ module.exports = function createKey(table, callback) {
   db.updateItem({
     TableName: getTableName(),
     Key:{
-      'scopeID': {S: '_seq'},
-      'dataID': {S: table}
+      'scopeID': {S: process.env.BEGIN_DATA_SCOPE_ID || process.env.ARC_APP_NAME || 'sandbox'},
+      'dataID': {S: `${table}-seq`}
     },
     AttributeUpdates: {
       idx: {
