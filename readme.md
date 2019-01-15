@@ -2,7 +2,7 @@
 
 [ ![Codeship Status for smallwins/begin-data](https://app.codeship.com/projects/54207a80-9b6b-0136-cc78-3a6df96c6020/status?branch=master)](https://app.codeship.com/projects/305743)
 
-Begin Data is a durable and fast key/value store built on top of DynamoDB with super simple storage/access patterns that are similar to Redis.
+Begin Data is a durable and fast key/value store built on top of DynamoDB with only three core API methods: `get`, `set` and `destroy`.
 
 ## Concepts
 
@@ -25,6 +25,32 @@ data
   ttl TTL
 ```
 
+Or equiv CloudFormation YAML:
+
+```yaml
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+    BeginData:
+        Type: "AWS::DynamoDB::Table"
+        Properties:
+            TableName: "data"
+            BillingMode: "PAY_PER_REQUEST"
+            KeySchema: 
+              - 
+                AttributeName: "scopeID"
+                KeyType: "HASH"
+              - 
+                AttributeName: "dataID"
+                KeyType: "RANGE"
+            SSESpecification: 
+                Enabled: "false"
+            TimeToLiveSpecification:
+                AttributeName: "ttl"
+                Enabled: "TRUE"
+```
+
+> Note 👉🏽 non [Architect](https://arc.codes) projects will need `BEGIN_DATA_TABLE_NAME` environment variable. You can also use this env var to override and name the table anything you want. This also allows for mulitple apps to share a single table.
+ 
 ### API
 
 ```javascript
@@ -33,15 +59,15 @@ let data = require('@begin/data')
 
 The core API is three methods:
 
-- `data.get(params, [callback])` for retreiving data
-- `data.set(params, [callback])` for writing data 
-- `data.destroy(params, [callback])` for removing data
+- `data.get(params, [callback]) → Promise` for retreiving data
+- `data.set(params, [callback]) → Promise` for writing data 
+- `data.destroy(params, [callback]) → Promise` for removing data
 
 Additional helper methods are also made available:
 
-- `data.incr(params, [callback])` increment an attribute on an document
-- `data.decr(params, [callback])` decrement an attribute on an document
-- `data.count(params, [callback])` get the number of documents for a given table
+- `data.incr(params, [callback]) → Promise` increment an attribute on an document
+- `data.decr(params, [callback]) → Promise` decrement an attribute on an document
+- `data.count(params, [callback]) → Promise` get the number of documents for a given table
 
 All methods accept params object and, optionally, a Node style errback. If no errback is supplied a promise is returned. All methods support `async`/`await`.
 
