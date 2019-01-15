@@ -28,10 +28,15 @@ test('start sandbox', async t=> {
   t.ok(true, 'started')
 })
 
-
 /**
  * try out the basic reads
  */
+test('get a key that does not exist returns null', async t=> {
+  t.plan(1)
+  let result = await data.get({table:'foo', key:'nooo'})
+  t.equal(result, null, 'non existent key returns null')
+})
+
 test('set/get/count', async t=> {
   t.plan(2)
 
