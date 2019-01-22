@@ -1,16 +1,19 @@
 # Begin Data
+## [`@begin/data`](https://www.npmjs.com/package/@begin/data)
 
 [ ![Codeship Status for smallwins/begin-data](https://app.codeship.com/projects/54207a80-9b6b-0136-cc78-3a6df96c6020/status?branch=master)](https://app.codeship.com/projects/305743)
 
-Begin Data is a durable and fast key/value store built on top of DynamoDB with only three core API methods: `get`, `set` and `destroy`.
+Begin Data is an easy to use, fast, and durable key/value and document store built on top of DynamoDB. Originally built for [Begin serverless apps](https://begin.com), Begin Data’s core API has three simple methods: `get`, `set`, and `destroy`.
 
 ## Concepts
 
-Begin Data organizes itself into tables. Tables contain documents which are just collections of plain `Object`s. documents stored in Begin Data always have the properties `table` and `key`. Optionally an document can also have a `ttl` property with a UNIX epoch value representing the expiry time for the document.
+Begin Data organizes itself into `table`s. A `table` contain documents which are just collections of plain Objects. Documents stored in Begin Data always have the properties `table` and `key`.
+
+Optionally a document can also have a `ttl` property with a UNIX epoch value representing the expiry time for the document.
 
 ## Usage
 
-Begin Data operates on one DynamoDB table named `data` with a partition key `scopeID` and a sort key of `dataID` and, optionally, a `ttl` for expiring documents. 
+Begin Data operates on one DynamoDB table named `data` with a partition key `scopeID` and a sort key of `dataID` (and, optionally, a `ttl` for expiring documents).
 
 Example `.arc`:
 
@@ -25,7 +28,7 @@ data
   ttl TTL
 ```
 
-Or equiv CloudFormation YAML:
+Or equivalent CloudFormation YAML:
 
 ```yaml
 AWSTemplateFormatVersion: "2010-09-09"
@@ -49,7 +52,7 @@ Resources:
                 Enabled: "TRUE"
 ```
 
-> Note 👉🏽 non [Architect](https://arc.codes) projects will need `BEGIN_DATA_TABLE_NAME` environment variable. You can also use this env var to override and name the table anything you want. This also allows for mulitple apps to share a single table.
+> Note: projects not based on [Architect](https://arc.codes) will need a `BEGIN_DATA_TABLE_NAME` environment variable. You can also use this env var to override and name the table anything you want. This also allows for multiple apps to share a single table.
  
 ### API
 
@@ -59,21 +62,21 @@ let data = require('@begin/data')
 
 The core API is three methods:
 
-- `data.get(params, [callback]) → Promise` for retreiving data
-- `data.set(params, [callback]) → Promise` for writing data 
-- `data.destroy(params, [callback]) → Promise` for removing data
+- `data.get(params[, callback])` → `[Promise]` for retreiving data
+- `data.set(params[, callback])` → `[Promise]` for writing data 
+- `data.destroy(params[, callback])` → `[Promise]` for removing data
 
 Additional helper methods are also made available:
 
-- `data.incr(params, [callback]) → Promise` increment an attribute on an document
-- `data.decr(params, [callback]) → Promise` decrement an attribute on an document
-- `data.count(params, [callback]) → Promise` get the number of documents for a given table
+- `data.incr(params[, callback])` → `[Promise]` increment an attribute on a document
+- `data.decr(params[, callback])` → `[Promise]` decrement an attribute on a document
+- `data.count(params[, callback])` → `[Promise]` get the number of documents for a given table
 
-All methods accept params object and, optionally, a Node style errback. If no errback is supplied a promise is returned. All methods support `async`/`await`.
+All methods accept a params object and, optionally, a Node-style errback. If no errback is supplied, a Promise is returned. All methods support `async`/`await`.
 
 #### Writes
 
-Save an document in a table by key. Remember `table` is always required.
+Save a document in a `table` by `key`. Remember: `table` is required; `key` is optional.
 
 ```javascript
 let taco = await data.set({
@@ -82,16 +85,16 @@ let taco = await data.set({
 })
 ```
 
-`key` is optional. But all documents have a key. If no key is given `set` will generate a unique `key`. 
+All documents have a `key`. If no `key` is given, `set` will generate a unique `key`. 
 
 ```javascript
 let token = await data.set({
   table: 'tokens', 
 })
-// {table:'tokens', key:'s89sdfjskfdj'}
+// {table:'tokens', key:'LCJkYX9jYWwidW50RhSU'}
 ```
 
-Batch save multiple documents at once by passing an array of objects.
+Batch save multiple documents at once by passing an Array of Objects.
 
 ```javascript
 let collection = await data.set([
@@ -104,7 +107,7 @@ let collection = await data.set([
 
 #### Reads
 
-Read an document by key:
+Read a document by `key`:
 
 ```javascript
 let yum = await data.get({
@@ -113,7 +116,7 @@ let yum = await data.get({
 })
 ```
 
-Batch read by passing an array of objects. With these building blocks you can construct secondary indexes and joins like one-to-many and many-to-many.
+Batch read by passing an Array of Objects. With these building blocks you can construct secondary indexes and joins, like one-to-many and many-to-many.
 
 ```javascript
 await data.get([
@@ -124,7 +127,7 @@ await data.get([
 
 #### Destroy
 
-Delete an document by key.
+Delete a document by `key`.
 
 ```javascript
 await data.destroy({
@@ -133,7 +136,7 @@ await data.destroy({
 })
 ```
 
-Batch delete documents by passing an array of objects.
+Batch delete documents by passing an Array of Objects.
 
 ```javascript
 await data.destroy([
@@ -153,9 +156,14 @@ See the tests for more examples!
 
 Coming soon! Detailed guides for various data persistence tasks:
 
-- denormalizing
-- pagination
-- counters
-- secondary indexes
-- one to many
-- many to many
+- Denormalizing
+- Pagination
+- Counters
+- Secondary indexes
+- One to many
+- Many to many
+
+## More
+
+- [Try out Begin Data on Begin!](https://begin.com)
+- [Learn more about Begin Data](https://docs.begin.com/en/data/begin-data/)
