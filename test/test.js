@@ -60,7 +60,10 @@ test('set/get/count', async t=> {
  */
 test('Size limit test', async t=> {
   t.plan(1)
+  // eslint-disable-next-line
   let doc = require('./mock.json')
+  doc.books = doc.books.concat(doc.books)
+                       .concat(doc.books) // in triplicate
   try {
     await data.set(doc)
   }
@@ -91,7 +94,7 @@ test('destroy', async t=> {
 test('batch set (across multiple tables)', async t=> {
   t.plan(2)
 
-  let result = await data.set([
+  await data.set([
     {table: 'ppl', name:'brian', email:'b@brian.io'},
     {table: 'ppl', name:'sutr0', email:'sutr0@brian.io'},
     {table: 'tacos', key:'pollo'},
@@ -106,7 +109,7 @@ test('batch set (across multiple tables)', async t=> {
 })
 
 
-/** 
+/**
  * limit batch to 25 items (we can expand this to stream in the future)
  */
 test('set batch max exceeded', async t=> {
@@ -236,10 +239,10 @@ test('implementing a scan', t=> {
           allppl = allppl.concat(result)
           if (result.cursor) {
             let props = {
-              table: params.table, 
+              table: params.table,
               cursor: result.cursor
             }
-            if (params.limit) 
+            if (params.limit)
               props.limit = params.limit
             _scan(props, callback)
           }
@@ -270,7 +273,7 @@ test('implementing a scan', t=> {
 //  t.plan(2)
 //  let pages = data.page({table:'ppl', limit:10})
 //  let count = 0
-//  for await (let page of pages()) { 
+//  for await (let page of pages()) {
 //    count++
 //  }
 //  t.ok(count === 1, 'one page of ppl')
@@ -279,7 +282,7 @@ test('implementing a scan', t=> {
 //test('stream one at a time', async t=> {
 //  t.plan(2)
 //  let ppl = data.page({table:'ppl'})
-//  for await (let person of ppl()) { 
+//  for await (let person of ppl()) {
 //    console.log(person)
 //    break
 //  }

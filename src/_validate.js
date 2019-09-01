@@ -28,7 +28,7 @@
  * ---
  * ensures the following
  * - has a table and key
- * - is less than 10KB
+ * - is less than 50KB
  *
  */
 
@@ -93,10 +93,10 @@ module.exports = {
   },
 
   size(i) {
-    let _size = i=> Buffer.byteLength(JSON.stringify(i)) > 10000
+    let _size = i=> Buffer.byteLength(JSON.stringify(i)) > 50000
     let tooBig = Array.isArray(i)? i.some(_size) : _size(i)
     if (tooBig)
-      throw Error(`Item too large; must be less than 10KB`)
+      throw Error(`Item too large; must be less than 50KB`)
   }
 }
 
