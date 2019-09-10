@@ -28,7 +28,7 @@ module.exports = function page(params, callback) {
   waterfall([
     getTableName,
     function pager(TableName, callback) {
-      
+
       params.key = params.begin || 'UNKNOWN'
       let {scopeID, dataID} = getKey(params)
       dataID = dataID.replace('#UNKNOWN', '')
