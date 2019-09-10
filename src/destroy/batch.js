@@ -2,9 +2,10 @@
  * @private
  * @module destroy/batch
  */
-let doc = require('../_get-doc')
+let waterfall = require('run-waterfall')
 let getTableName = require('../_get-table-name')
 let getKey = require('../_get-key')
+let doc = require('../_get-doc')
 
 /**
  * Destroy an array of documents
@@ -19,13 +20,17 @@ module.exports = function batch(params, callback) {
     throw ReferenceError('Missing table in params')
 
   // do batch
-  let TableName = getTableName()
-  let req = Key=> ({DeleteRequest: {Key}})
-  let batch = params.map(getKey).map(req)
-  let query = {RequestItems:{}}
-  query.RequestItems[TableName] = batch
-
-  doc.batchWrite(query, function _batchWrite(err) {
+  waterfall([
+    getTableName,
+    function destroys(TableName, callback) {
+      let req = Key=> ({DeleteRequest: {Key}})
+      let batch = params.map(getKey).map(req)
+      let query = {RequestItems:{}}
+      query.RequestItems[TableName] = batch
+      doc.batchWrite(query, callback)
+    }
+  ],
+  function destroyed(err) {
     if (err) callback(err)
     else callback()
   })

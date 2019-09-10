@@ -2,9 +2,10 @@
  * @private
  * @module destroy/one
  */
-let doc = require('../_get-doc')
+let waterfall = require('run-waterfall')
 let getTableName = require('../_get-table-name')
 let getKey = require('../_get-key')
+let doc = require('../_get-doc')
 
 /**
  * Destroy a document
@@ -12,10 +13,14 @@ let getKey = require('../_get-key')
  * @param {callback} errback - Node style error first callback
  */
 module.exports = function one(params, callback) {
-  let TableName = getTableName()
-  let Key = getKey(params)
-  doc.delete({
-    TableName,
-    Key,
-  }, callback)
+  waterfall([
+    getTableName,
+    function destroys(TableName, callback) {
+      let Key = getKey(params)
+      doc.delete({
+        TableName,
+        Key,
+      }, callback)
+    }
+  ], callback)
 }

@@ -3,6 +3,7 @@
  * @module incr
  * @module decr
  */
+let waterfall = require('run-waterfall')
 let doc = require('./_get-doc')
 let getTableName = require('./_get-table-name')
 let getKey = require('./_get-key')
@@ -31,17 +32,22 @@ function atomic(isIncr, params, callback) {
       }
     })
   }
-  // perform the atomic update and callback w the updated values
-  doc.update({
-    TableName: getTableName(),
-    Key: getKey({table, key}),
-    UpdateExpression: `set ${prop} = ${prop} ${isIncr?'+':'-'} :val`,
-    ExpressionAttributeValues:{
-      ':val': 1
-    },
-    ReturnValues: 'ALL_NEW'
-  },
-  function update(err, result) {
+  waterfall([
+    getTableName,
+    function update(TableName, callback) {
+      // perform the atomic update and callback w the updated values
+      doc.update({
+        TableName,
+        Key: getKey({table, key}),
+        UpdateExpression: `set ${prop} = ${prop} ${isIncr?'+':'-'} :val`,
+        ExpressionAttributeValues:{
+          ':val': 1
+        },
+        ReturnValues: 'ALL_NEW'
+      }, callback)
+    }
+  ],
+  function updated(err, result) {
     if (err) callback(err)
     else {
       callback(null, result.Attributes)

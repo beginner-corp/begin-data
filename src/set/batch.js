@@ -2,14 +2,15 @@
  * @private
  * @module set/batch
  */
-let doc = require('../_get-doc')
-let getTableName = require('../_get-table-name')
 let waterfall = require('run-waterfall')
 let parallel = require('run-parallel')
+
+let getTableName = require('../_get-table-name')
 let createKey = require('../_create-key')
-let fmt = require('../_fmt')
-let unfmt = require('../_unfmt')
 let validate = require('../_validate')
+let unfmt = require('../_unfmt')
+let fmt = require('../_fmt')
+let doc = require('../_get-doc')
 
 /**
  * Write an array of documents
@@ -28,11 +29,17 @@ module.exports = function batch(params, callback) {
     function getKeys(callback) {
       maybeAddKeys(params, callback)
     },
-    function writeKeys(items, callback) {
+    function getsTableName(items, callback) {
+      getTableName(function done(err, TableName) {
+        if (err) callback(err)
+        else callback(null, TableName, items)
+      })
+    },
+    function writeKeys(TableName, items, callback) {
       validate.size(items)
       let batch = items.map(Item=> ({PutRequest:{Item}}))
       let query = {RequestItems:{}}
-      query.RequestItems[getTableName()] = batch
+      query.RequestItems[TableName] = batch
       doc.batchWrite(query, function done(err) {
         if (err) callback(err)
         else {

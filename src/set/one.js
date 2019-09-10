@@ -2,13 +2,13 @@
  * @private
  * @module set/one
  */
-let doc = require('../_get-doc')
-let fmt = require('../_fmt')
-let unfmt = require('../_unfmt')
-let getTableName = require('../_get-table-name')
 let waterfall = require('run-waterfall')
+let getTableName = require('../_get-table-name')
 let createKey = require('../_create-key')
 let validate = require('../_validate')
+let unfmt = require('../_unfmt')
+let fmt = require('../_fmt')
+let doc = require('../_get-doc')
 
 /**
  * Write a document
@@ -23,10 +23,16 @@ module.exports = function one(params, callback) {
     function getKey(callback) {
       maybeCreateKey(params, callback)
     },
-    function write(Item, callback) {
+    function getTable(Item, callback) {
+      getTableName(function done(err, TableName) {
+        if (err) callback(err)
+        else callback(null, TableName, Item)
+      })
+    },
+    function write(TableName, Item, callback) {
       validate.size(Item)
       doc.put({
-        TableName: getTableName(),
+        TableName,
         Item
       },
       function done(err) {

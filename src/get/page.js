@@ -2,10 +2,11 @@
  * @private
  * @module get/page
  */
-let doc = require('../_get-doc')
+let waterfall = require('run-waterfall')
 let getTableName = require('../_get-table-name')
 let getKey = require('../_get-key')
 let unfmt = require('../_unfmt')
+let doc = require('../_get-doc')
 
 /**
  * Read documents
@@ -24,29 +25,33 @@ module.exports = function page(params, callback) {
     })
   }
 
-  // actual impl
-  params.key = 'UNKNOWN'
-  let {scopeID, dataID} = getKey(params)
-  let query = {
-    TableName: getTableName(),
-    Limit: params.limit || 10,
-    KeyConditionExpression: '#scopeID = :scopeID and begins_with(#dataID, :dataID)',
-    ExpressionAttributeNames: {
-      '#scopeID': 'scopeID',
-      '#dataID': 'dataID'
+  waterfall([
+    getTableName,
+    function pager(TableName, callback) {
+      params.key = 'UNKNOWN'
+      let {scopeID, dataID} = getKey(params)
+      let query = {
+        TableName,
+        Limit: params.limit || 10,
+        KeyConditionExpression: '#scopeID = :scopeID and begins_with(#dataID, :dataID)',
+        ExpressionAttributeNames: {
+          '#scopeID': 'scopeID',
+          '#dataID': 'dataID'
+        },
+        ExpressionAttributeValues: {
+          ':scopeID': scopeID,
+          ':dataID': dataID.replace('#UNKNOWN', ''),
+        }
+      }
+      if (params.cursor) {
+        query.ExclusiveStartKey = JSON.parse(Buffer.from(params.cursor, 'base64').toString('utf8'))
+      }
+      doc.query(query, callback)
     },
-    ExpressionAttributeValues: {
-      ':scopeID': scopeID,
-      ':dataID': dataID.replace('#UNKNOWN', ''),
-    }
-  }
-  if (params.cursor) {
-    query.ExclusiveStartKey = JSON.parse(Buffer.from(params.cursor, 'base64').toString('utf8'))
-  }
-  doc.query(query, function _get(err, result) {
+  ],
+  function paged(err, result) {
     if (err) callback(err)
     else {
-      //console.log(Object.keys(result))
       let returns = result.Items.map(unfmt)
       if (result.LastEvaluatedKey)
         returns.cursor = Buffer.from(JSON.stringify(result.LastEvaluatedKey)).toString('base64')
@@ -54,6 +59,5 @@ module.exports = function page(params, callback) {
     }
   })
 
-  // more fun
   return promise
 }

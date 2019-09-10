@@ -2,10 +2,11 @@
  * @private
  * @module get/one
  */
-let doc = require('../_get-doc')
+let waterfall = require('run-waterfall')
 let getTableName = require('../_get-table-name')
 let getKey = require('../_get-key')
 let unfmt = require('../_unfmt')
+let doc = require('../_get-doc')
 
 /**
  * Read a document
@@ -22,14 +23,17 @@ module.exports = function one(params, callback) {
       }
     })
   }
-  // actual impl
-  let TableName = getTableName()
-  let Key = getKey(params)
-  doc.get({
-    TableName,
-    Key
-  },
-  function _get(err, result) {
+  waterfall([
+    getTableName,
+    function gets(TableName, callback) {
+      let Key = getKey(params)
+      doc.get({
+        TableName,
+        Key
+      }, callback)
+    }
+  ],
+  function gots(err, result) {
     if (err) callback(err)
     else callback(null, unfmt(result.Item))
   })

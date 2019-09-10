@@ -2,10 +2,12 @@
  * @private
  * @module get/batch
  */
-let doc = require('../_get-doc')
+let waterfall = require('run-waterfall')
 let getTableName = require('../_get-table-name')
-let unfmt = require('../_unfmt')
 let getKey = require('../_get-key')
+let unfmt = require('../_unfmt')
+let doc = require('../_get-doc')
+
 let badKey = i=> !(i.hasOwnProperty('table') && i.hasOwnProperty('key'))
 
 /**
@@ -28,15 +30,19 @@ module.exports = function batch(Keys, callback) {
     callback(Error('Invalid params: all items must have table and key'))
   }
   else {
-    let table = getTableName()
-    let query = {RequestItems:{}}
-    query.RequestItems[table] = {Keys: Keys.map(getKey)}
-    doc.batchGet(query, function batchGet(err, result) {
-      if (err) callback(err)
-      else {
-        callback(null, result.Responses[table].map(unfmt))
+    waterfall([
+      getTableName,
+      function gets(table, callback) {
+        let query = {RequestItems:{}}
+        query.RequestItems[table] = {Keys: Keys.map(getKey)}
+        doc.batchGet(query, function gots(err, result) {
+          if (err) callback(err)
+          else {
+            callback(null, result.Responses[table].map(unfmt))
+          }
+        })
       }
-    })
+    ], callback)
   }
   // more fun
   return promise

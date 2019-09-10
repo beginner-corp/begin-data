@@ -1,9 +1,10 @@
 /**
  * @module count
  */
-let doc = require('./_get-doc')
-let getKey = require('./_get-key')
+let waterfall = require('run-waterfall')
 let getTableName = require('./_get-table-name')
+let getKey = require('./_get-key')
+let doc = require('./_get-doc')
 
 /**
  * Get document count for given table
@@ -23,20 +24,25 @@ module.exports = function count({table}, callback) {
     })
   }
   let {scopeID, dataID} = getKey({table, key:'UNKNOWN'})
-  doc.query({
-    TableName: getTableName(),
-    Select: 'COUNT',
-    KeyConditionExpression: '#scopeID = :scopeID and begins_with(#dataID, :dataID)',
-    ExpressionAttributeNames: {
-      '#scopeID': 'scopeID',
-      '#dataID': 'dataID'
-    },
-    ExpressionAttributeValues: {
-      ':scopeID': scopeID,
-      ':dataID': dataID.replace('#UNKNOWN', ''),
+  waterfall([
+    getTableName,
+    function counts(TableName, callback) {
+      doc.query({
+        TableName,
+        Select: 'COUNT',
+        KeyConditionExpression: '#scopeID = :scopeID and begins_with(#dataID, :dataID)',
+        ExpressionAttributeNames: {
+          '#scopeID': 'scopeID',
+          '#dataID': 'dataID'
+        },
+        ExpressionAttributeValues: {
+          ':scopeID': scopeID,
+          ':dataID': dataID.replace('#UNKNOWN', ''),
+        }
+      }, callback)
     }
-  },
-  function _query(err, result) {
+  ],
+  function counted(err, result) {
     if (err) callback(err)
     else {
       callback(null, result.ScannedCount)
