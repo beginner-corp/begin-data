@@ -302,28 +302,22 @@ test('using multiple tables to get range queries (aka sort key)', async t=> {
   console.log(sept)
 })
 
-// * node10 pagination will have to wait for a lambda upgrade!
-// we could start mocking this in with a generator but the syntax is ugly in node8.10
-//
-//test('paginate ten at a time', async t=> {
-//  t.plan(2)
-//  let pages = data.page({table:'ppl', limit:10})
-//  let count = 0
-//  for await (let page of pages()) {
-//    count++
-//  }
-//  t.ok(count === 1, 'one page of ppl')
-//})
-//
-//test('stream one at a time', async t=> {
-//  t.plan(2)
-//  let ppl = data.page({table:'ppl'})
-//  for await (let person of ppl()) {
-//    console.log(person)
-//    break
-//  }
-//})
+/**
+ * node 10.x for await of syntax
+ */
+test('paginate ten at a time', async t=> {
+  t.plan(1)
 
+  let pages = data.page({table:'ppl', limit:25})
+  let count = 0
+  for await (let page of pages) {
+    console.log(page)
+    count++
+  }
+
+  t.ok(count === 5, 'counted five pages (102 records at 25 per page)')
+  console.log(count)
+})
 
 // fin
 test('shutdown sandbox', t=> {
