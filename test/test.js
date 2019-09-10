@@ -1,4 +1,4 @@
-let arc = require('@architect/architect')
+let sandbox = require('@architect/sandbox')
 let data = require('../.')
 let test = require('tape')
 
@@ -7,8 +7,8 @@ let test = require('tape')
  * ensure the api is present
  */
 test('env', t=> {
-  t.plan(7)
-  t.ok(arc.sandbox, 'arc.sandbox')
+  t.plan(6)
+  //t.ok(arc.sandbox, 'arc.sandbox')
   t.ok(data.get, 'data.get')
   t.ok(data.set, 'data.set')
   t.ok(data.destroy, 'data.destroy')
@@ -24,7 +24,8 @@ test('env', t=> {
 let end
 test('start sandbox', async t=> {
   t.plan(1)
-  end = await arc.sandbox.start()
+  end = await sandbox.start()
+  console.log(end)
   t.ok(true, 'started')
 })
 
