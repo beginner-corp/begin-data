@@ -266,6 +266,41 @@ test('implementing a scan', t=> {
   })
 })
 
+/**
+ *
+ */
+test('using multiple tables to get range queries (aka sort key)', async t=> {
+  t.plan(4)
+
+  await data.set([
+    {table: 'games', key: 'hockey'},
+    {table: 'games', key: 'baseball'},
+    {table: 'games', key: 'curling'},
+    {table: 'hockey', key: '2019-09-16-canucks-at-flames', title: 'canucks at flames'},
+    {table: 'hockey', key: '2019-09-17-oilers-at-canucks', title: 'oilers at canucks'},
+    {table: 'hockey', key: '2019-09-19-canucks-at-oilers', title: 'canucks at oilers'},
+    {table: 'hockey', key: '2019-09-21-canucks-at-kings', title: 'canucks at kings'},
+    {table: 'hockey', key: '2019-10-17-canucks-at-blues', title: 'canucks at blues'},
+  ])
+
+  // can list all possible indices
+  let indices = await data.get({table: 'games'})
+  t.ok(indices.length > 0, 'indices')
+  console.log(indices)
+  
+  // can retrive by key
+  let game = await data.get({table: 'hockey', key: '2019-09-21-canucks-at-kings'}) 
+  t.ok(!!game.title, game.title)
+
+  // can retrieve by sport
+  let curling = await data.get({table: 'curling'}) 
+  t.ok(curling.length === 0, 'no curling games in data')
+  
+  // can retrieve by date!!
+  let sept = await data.get({table: 'hockey', begin: '2019-09'}) // 🆕
+  t.ok(sept.length === 4, 'four games in sept')
+  console.log(sept)
+})
 
 // * node10 pagination will have to wait for a lambda upgrade!
 // we could start mocking this in with a generator but the syntax is ugly in node8.10

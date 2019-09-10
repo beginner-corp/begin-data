@@ -28,8 +28,11 @@ module.exports = function page(params, callback) {
   waterfall([
     getTableName,
     function pager(TableName, callback) {
-      params.key = 'UNKNOWN'
+      
+      params.key = params.begin || 'UNKNOWN'
       let {scopeID, dataID} = getKey(params)
+      dataID = dataID.replace('#UNKNOWN', '')
+
       let query = {
         TableName,
         Limit: params.limit || 10,
@@ -40,7 +43,7 @@ module.exports = function page(params, callback) {
         },
         ExpressionAttributeValues: {
           ':scopeID': scopeID,
-          ':dataID': dataID.replace('#UNKNOWN', ''),
+          ':dataID': dataID,
         }
       }
       if (params.cursor) {
