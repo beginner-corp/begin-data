@@ -69,21 +69,22 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Set up Node again, this time using GitHub as the publish target
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://npm.pkg.github.com/
+      ## TODO reenable once GHPR goes GA
+      # # Set up Node again, this time using GitHub as the publish target
+      # - uses: actions/setup-node@v1
+      #   with:
+      #     node-version: 12
+      #     registry-url: https://npm.pkg.github.com/
 
-      # Publish to GitHub
-      - name: Publish @RC to GitHub
-        if: contains(github.ref, 'RC')
-        run: npm publish --tag RC
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # # Publish to GitHub
+      # - name: Publish @RC to GitHub
+      #   if: contains(github.ref, 'RC')
+      #   run: npm publish --tag RC
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish @latest to GitHub
-        if: contains(github.ref, 'RC') == false #'!contains()'' doesn't work lol
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Publish @latest to GitHub
+      #   if: contains(github.ref, 'RC') == false #'!contains()'' doesn't work lol
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

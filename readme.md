@@ -1,7 +1,7 @@
 # Begin Data
 ## [`@begin/data`](https://www.npmjs.com/package/@begin/data)
 
-[ ![Codeship Status for smallwins/begin-data](https://app.codeship.com/projects/54207a80-9b6b-0136-cc78-3a6df96c6020/status?branch=master)](https://app.codeship.com/projects/305743)
+[![GitHub CI status](https://github.com/smallwins/begin-data/workflows/Node%20CI/badge.svg)](https://github.com/smallwins/begin-data/actions?query=workflow%3A%22Node+CI%22)
 
 Begin Data is an easy to use, fast, and durable key/value and document store built on top of DynamoDB. Originally built for [Begin serverless apps](https://begin.com), Begin Data’s core API has three simple methods: `get`, `set`, and `destroy`.
 
@@ -38,14 +38,14 @@ Resources:
         Properties:
             TableName: "data"
             BillingMode: "PAY_PER_REQUEST"
-            KeySchema: 
-              - 
+            KeySchema:
+              -
                 AttributeName: "scopeID"
                 KeyType: "HASH"
-              - 
+              -
                 AttributeName: "dataID"
                 KeyType: "RANGE"
-            SSESpecification: 
+            SSESpecification:
                 Enabled: "false"
             TimeToLiveSpecification:
                 AttributeName: "ttl"
@@ -53,7 +53,7 @@ Resources:
 ```
 
 > Note: projects not based on [Architect](https://arc.codes) will need a `BEGIN_DATA_TABLE_NAME` environment variable. You can also use this env var to override and name the table anything you want. This also allows for multiple apps to share a single table.
- 
+
 ### API
 
 ```javascript
@@ -63,7 +63,7 @@ let data = require('@begin/data')
 The core API is three methods:
 
 - `data.get(params[, callback])` → `[Promise]` for retreiving data
-- `data.set(params[, callback])` → `[Promise]` for writing data 
+- `data.set(params[, callback])` → `[Promise]` for writing data
 - `data.destroy(params[, callback])` → `[Promise]` for removing data
 
 Additional helper methods are also made available:
@@ -80,16 +80,16 @@ Save a document in a `table` by `key`. Remember: `table` is required; `key` is o
 
 ```javascript
 let taco = await data.set({
-  table: 'tacos', 
+  table: 'tacos',
   key: 'al-pastor'
 })
 ```
 
-All documents have a `key`. If no `key` is given, `set` will generate a unique `key`. 
+All documents have a `key`. If no `key` is given, `set` will generate a unique `key`.
 
 ```javascript
 let token = await data.set({
-  table: 'tokens', 
+  table: 'tokens',
 })
 // {table:'tokens', key:'LCJkYX9jYWwidW50RhSU'}
 ```
@@ -111,7 +111,7 @@ Read a document by `key`:
 
 ```javascript
 let yum = await data.get({
-  table: 'tacos', 
+  table: 'tacos',
   key: 'baja'
 })
 ```
@@ -131,7 +131,7 @@ Delete a document by `key`.
 
 ```javascript
 await data.destroy({
-  table: 'tacos', 
+  table: 'tacos',
   key: 'pollo'
 })
 ```
