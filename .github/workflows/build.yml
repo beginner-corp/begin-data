@@ -1,6 +1,6 @@
 name: Node CI
 
-# Push tests pushes; PR tests merges
+# Push tests commits; pull_request tests PR merges
 on: [push, pull_request]
 
 jobs:
