@@ -90,6 +90,10 @@ jobs:
           node-version: 10
           registry-url: https://npm.pkg.github.com/
 
+      # Change package org (@smallwins on GitHub vs @begin on NPM)
+      - name: Change package name
+        run: scripts/change-package-name @smallwins/data
+
       # Publish to GitHub
       - name: Publish @RC to GitHub
         if: contains(github.ref, 'RC')
