@@ -30,8 +30,8 @@ jobs:
         echo "Git ref:    ${{ github.ref }}"
         echo "GH actor:   ${{ github.actor }}"
         echo "SHA:        ${{ github.sha }}"
-        node --version
-        npm --version
+        VER=`node --version`; echo "Node ver:   $VER"
+        VER=`npm --version`; echo "npm ver:    $VER"
 
     - name: Install
       run: npm install
