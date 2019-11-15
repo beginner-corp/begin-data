@@ -1,7 +1,7 @@
 name: Node CI
 
-# Push tests pushes; PR tests merges; create tests tags (and releases)
-on: [push, pull_request, create]
+# Push tests pushes; PR tests merges
+on: [push, pull_request]
 
 jobs:
 
@@ -24,8 +24,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Versions
-      run: node --version
+    - name: Env
+      run: |
+        echo "Event name: ${{ github.event_name }}"
+        echo "Git ref:    ${{ github.ref }}"
+        echo "GH actor:   ${{ github.actor }}"
+        echo "SHA:        ${{ github.sha }}"
+        node --version
+        npm --version
 
     - name: Install
       run: npm install
@@ -33,13 +39,22 @@ jobs:
     - name: Test
       run: npm test
 
+    - name: Notify
+      uses: homoluctus/slatify@master
+      # Only fire alert once
+      if: github.ref == 'refs/heads/master' && failure() && matrix.node-version == '10.x' && matrix.os == 'ubuntu-latest'
+      with:
+        type: ${{ job.status }}
+        job_name: '*Build*'
+        url: ${{ secrets.SLACK_WEBHOOK }}
+
   # ----- Only git tag testing + package publishing beyond this point ----- #
 
   # Publish to package registries
   publish:
     # Setup
     needs: build
-    if: github.event_name == 'create' && startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     # Go
@@ -50,7 +65,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 10
           registry-url: https://registry.npmjs.org/
 
       - name: Install
@@ -69,22 +84,29 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      ## TODO reenable once GHPR goes GA
-      # # Set up Node again, this time using GitHub as the publish target
-      # - uses: actions/setup-node@v1
-      #   with:
-      #     node-version: 12
-      #     registry-url: https://npm.pkg.github.com/
+      # Set up Node again, this time using GitHub as the publish target
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+          registry-url: https://npm.pkg.github.com/
 
-      # # Publish to GitHub
-      # - name: Publish @RC to GitHub
-      #   if: contains(github.ref, 'RC')
-      #   run: npm publish --tag RC
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Publish to GitHub
+      - name: Publish @RC to GitHub
+        if: contains(github.ref, 'RC')
+        run: npm publish --tag RC
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Publish @latest to GitHub
-      #   if: contains(github.ref, 'RC') == false #'!contains()'' doesn't work lol
-      #   run: npm publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish @latest to GitHub
+        if: contains(github.ref, 'RC') == false #'!contains()'' doesn't work lol
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify
+        uses: homoluctus/slatify@master
+        if: always()
+        with:
+          type: ${{ job.status }}
+          job_name: '*Publish*'
+          url: ${{ secrets.SLACK_WEBHOOK }}

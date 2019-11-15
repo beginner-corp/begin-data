@@ -1,3 +1,5 @@
 .arc
 .eslintrc.js
+.git
+.github
 test/
