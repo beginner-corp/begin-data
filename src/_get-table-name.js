@@ -4,7 +4,7 @@ let olds = require('./_get-table-name-old')
 
 module.exports = function _getTableName(callback) {
 
-  let override = process.env.hasOwnProperty('BEGIN_DATA_TABLE_NAME')
+  let override = process.env.BEGIN_DATA_TABLE_NAME
   let sandbox = process.env.NODE_ENV === 'testing'
   // ARC_CLOUDFORMATION is present in live AWS deploys with Architect 6+
   // DEPRECATED + ARC_HTTP are present in 2019+ versions of Sandbox

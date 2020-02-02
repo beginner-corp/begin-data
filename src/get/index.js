@@ -17,10 +17,10 @@ module.exports = function get(params, callback) {
   if (Array.isArray(params)) {
     return batch(params, callback)
   }
-  else if (params.hasOwnProperty('table') && params.hasOwnProperty('key')) {
+  else if (params['table'] && params['key']) {
     return one(params, callback)
   }
-  else if (params.hasOwnProperty('table')) {
+  else if (params['table']) {
     return page(params, callback)
   }
   else {

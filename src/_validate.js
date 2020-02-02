@@ -39,10 +39,8 @@ let ok = str=> /[a-z A-Z0-9.,:\-/+?&=@]+/g.test(str)
 module.exports = {
 
   table(t) {
-
     if (Array.isArray(t)) {
-
-      let missingTable = t.some(i=> !i.hasOwnProperty('table'))
+      let missingTable = t.some(i=> !i['table'])
       if (missingTable)
         throw ReferenceError('Table is not defined')
 
@@ -99,5 +97,3 @@ module.exports = {
       throw Error(`Item too large; must be less than 50KB`)
   }
 }
-
-

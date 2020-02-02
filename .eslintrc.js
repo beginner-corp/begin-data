@@ -1,11 +1,13 @@
 module.exports = {
-  'env': {
-    'node':true,
-    'es6': true
+  parserOptions: {
+    ecmaVersion: 2018
   },
-  'extends': 'eslint:recommended',
-  'rules': {
-    'semi': ["error", "never"],
+  env: {
+    node:true,
+    es6:true
+  },
+  extends: 'eslint:recommended',
+  rules: {
     // enable additional rules
     'linebreak-style': ['error', 'unix'],
     // node specific
@@ -20,9 +22,5 @@ module.exports = {
     'no-redeclare': 'off',
     // style specific
     'no-trailing-spaces': 'error'
-  },
-  // known to throw warnings
-  "parserOptions":{
-    "ecmaVersion": 2018
   }
-}                      
+}

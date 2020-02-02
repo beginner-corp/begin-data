@@ -8,7 +8,7 @@ let getKey = require('../_get-key')
 let unfmt = require('../_unfmt')
 let doc = require('../_get-doc')
 
-let badKey = i=> !(i.hasOwnProperty('table') && i.hasOwnProperty('key'))
+let badKey = i=> !(i['table'] && i['key'])
 
 /**
  * Read an array of documents

@@ -15,7 +15,7 @@ let doc = require('../_get-doc')
 module.exports = function batch(params, callback) {
 
   // ensure we have tables and keys
-  let hasBads = params.some(i=> !i.hasOwnProperty('table') || !i.hasOwnProperty('key'))
+  let hasBads = params.some(i=> !i['table'] || !i['key'])
   if (hasBads)
     throw ReferenceError('Missing table in params')
 
