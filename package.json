@@ -1,7 +1,7 @@
 {
   "name": "@begin/data",
   "version": "1.1.5-RC.0",
-  "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB.",
+  "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB",
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src --ignore-pattern node_modules --fix",
