@@ -2,6 +2,19 @@
 
 ---
 
+## [1.1.6] 2020-02-05
+
+### Added
+
+- Added support for dynamic local database port configuration in Sandbox (`ARC_TABLES_PORT`)
+
+
+### Fixed
+
+- Fixed issue with Begin Data not working correctly locally if you don't have an `~/.aws/credentials` file; fixes @begin-issues#15, thanks @wesbos!
+
+---
+
 ## [1.1.5] 2020-02-01
 
 ### Fixed

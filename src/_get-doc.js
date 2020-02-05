@@ -6,10 +6,11 @@ if (typeof process.env.NODE_ENV === 'undefined') {
   process.env.NODE_ENV = 'testing'
 }
 
-var aws = require('aws-sdk')
-var Doc = aws.DynamoDB.DocumentClient
-var endpoint = new aws.Endpoint('http://localhost:5000')
-var testing = process.env.NODE_ENV === 'testing'
+let aws = require('aws-sdk')
+let Doc = aws.DynamoDB.DocumentClient
+let port = process.env.ARC_TABLES_PORT || 5000
+let endpoint = new aws.Endpoint(`http://localhost:${port}`)
+let testing = process.env.NODE_ENV === 'testing'
 
 if (testing) {
   if (!process.env.AWS_SECRET_ACCESS_KEY)
@@ -22,4 +23,3 @@ if (testing) {
 }
 
 module.exports = testing? new Doc({endpoint}) : new Doc
-
