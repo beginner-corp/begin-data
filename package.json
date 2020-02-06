@@ -1,6 +1,6 @@
 {
   "name": "@begin/data",
-  "version": "1.1.6",
+  "version": "1.1.7-RC.0",
   "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB",
   "main": "src/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "run-waterfall": "^1.1.6"
   },
   "devDependencies": {
-    "@architect/sandbox": "^1.5.8",
+    "@architect/sandbox": "^1.6.1",
     "eslint": "^6.8.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.13.0"
