@@ -5,12 +5,12 @@
 let waterfall = require('run-waterfall')
 let parallel = require('run-parallel')
 
-let getTableName = require('../_get-table-name')
-let createKey = require('../_create-key')
-let validate = require('../_validate')
-let unfmt = require('../_unfmt')
-let fmt = require('../_fmt')
-let doc = require('../_get-doc')
+let getTableName = require('../helpers/_get-table-name')
+let createKey = require('../helpers/_create-key')
+let validate = require('../helpers/_validate')
+let unfmt = require('../helpers/_unfmt')
+let fmt = require('../helpers/_fmt')
+let doc = require('../helpers/_get-doc')
 
 /**
  * Write an array of documents

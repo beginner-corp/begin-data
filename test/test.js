@@ -57,24 +57,6 @@ test('set/get/count', async t=> {
 
 
 /**
- * item max size: 10KB
- */
-test('Size limit test', async t=> {
-  t.plan(1)
-  // eslint-disable-next-line
-  let doc = require('./mock.json')
-  doc.books = doc.books.concat(doc.books)
-                       .concat(doc.books) // in triplicate
-  try {
-    await data.set(doc)
-  }
-  catch(e) {
-    t.ok(true, e.message)
-  }
-})
-
-
-/**
  * destroy an item via key
  */
 test('destroy', async t=> {

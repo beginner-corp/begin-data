@@ -2,9 +2,9 @@
  * @module count
  */
 let waterfall = require('run-waterfall')
-let getTableName = require('./_get-table-name')
-let getKey = require('./_get-key')
-let doc = require('./_get-doc')
+let getTableName = require('./helpers/_get-table-name')
+let getKey = require('./helpers/_get-key')
+let doc = require('./helpers/_get-doc')
 
 /**
  * Get document count for given table

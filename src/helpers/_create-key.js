@@ -5,7 +5,7 @@
 let waterfall = require('run-waterfall')
 let getTableName = require('./_get-table-name')
 let db = require('./_get-db')
-let Hashids = require('hashids')
+let Hashids = require('@begin/hashid')
 let hash = new Hashids
 
 module.exports = function createKey(table, callback) {
