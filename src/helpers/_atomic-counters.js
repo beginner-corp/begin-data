@@ -4,7 +4,7 @@
  * @module decr
  */
 let waterfall = require('run-waterfall')
-let doc = require('./_get-doc')
+let getDoc = require('./_get-doc')
 let getTableName = require('./_get-table-name')
 let getKey = require('./_get-key')
 
@@ -34,7 +34,13 @@ function atomic(isIncr, params, callback) {
   }
   waterfall([
     getTableName,
-    function update(TableName, callback) {
+    function _getDoc(TableName, callback) {
+      getDoc(function done(err, doc) {
+        if (err) callback(err)
+        else callback(null, TableName, doc)
+      })
+    },
+    function update(TableName, doc, callback) {
       // perform the atomic update and callback w the updated values
       doc.update({
         TableName,

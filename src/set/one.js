@@ -8,7 +8,7 @@ let createKey = require('../helpers/_create-key')
 let validate = require('../helpers/_validate')
 let unfmt = require('../helpers/_unfmt')
 let fmt = require('../helpers/_fmt')
-let doc = require('../helpers/_get-doc')
+let getDoc = require('../helpers/_get-doc')
 
 /**
  * Write a document
@@ -29,7 +29,13 @@ module.exports = function one(params, callback) {
         else callback(null, TableName, Item)
       })
     },
-    function write(TableName, Item, callback) {
+    function _getDoc(TableName, Item, callback) {
+      getDoc(function done(err, doc) {
+        if (err) callback(err)
+        else callback(null, TableName, Item, doc)
+      })
+    },
+    function write(TableName, Item, doc, callback) {
       validate.size(Item)
       doc.put({
         TableName,

@@ -4,14 +4,20 @@
  */
 let waterfall = require('run-waterfall')
 let getTableName = require('./_get-table-name')
-let db = require('./_get-db')
+let getDB = require('./_get-db')
 let Hashids = require('@begin/hashid')
 let hash = new Hashids
 
 module.exports = function createKey(table, callback) {
   waterfall([
     getTableName,
-    function update(TableName, callback) {
+    function _getDB(TableName, callback) {
+      getDB(function done(err, db) {
+        if (err) callback(err)
+        else callback(null, TableName, db)
+      })
+    },
+    function update(TableName, db, callback) {
       db.updateItem({
         TableName,
         Key:{
