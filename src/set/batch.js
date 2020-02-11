@@ -10,7 +10,7 @@ let createKey = require('../helpers/_create-key')
 let validate = require('../helpers/_validate')
 let unfmt = require('../helpers/_unfmt')
 let fmt = require('../helpers/_fmt')
-let doc = require('../helpers/_get-doc')
+let getDoc = require('../helpers/_get-doc')
 
 /**
  * Write an array of documents
@@ -35,7 +35,13 @@ module.exports = function batch(params, callback) {
         else callback(null, TableName, items)
       })
     },
-    function writeKeys(TableName, items, callback) {
+    function _getDoc(TableName, items, callback) {
+      getDoc(function done(err, doc) {
+        if (err) callback(err)
+        else callback(null, TableName, items, doc)
+      })
+    },
+    function writeKeys(TableName, items, doc, callback) {
       validate.size(items)
       let batch = items.map(Item=> ({PutRequest:{Item}}))
       let query = {RequestItems:{}}

@@ -6,7 +6,7 @@ let waterfall = require('run-waterfall')
 let getTableName = require('../helpers/_get-table-name')
 let getKey = require('../helpers/_get-key')
 let unfmt = require('../helpers/_unfmt')
-let doc = require('../helpers/_get-doc')
+let getDoc = require('../helpers/_get-doc')
 
 /**
  * Read a document
@@ -25,7 +25,13 @@ module.exports = function one(params, callback) {
   }
   waterfall([
     getTableName,
-    function gets(TableName, callback) {
+    function _getDoc(TableName, callback) {
+      getDoc(function done(err, doc) {
+        if (err) callback(err)
+        else callback(null, TableName, doc)
+      })
+    },
+    function gets(TableName, doc, callback) {
       let Key = getKey(params)
       doc.get({
         TableName,

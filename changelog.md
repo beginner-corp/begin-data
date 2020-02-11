@@ -7,7 +7,10 @@
 - Increase soft row size limit to 200KB
 - Refactor private helper modules into `src/helpers`
 - Move from `hashids` to `@begin/hashids` to keep the package weight down
-- Remove package-lock.json [good explainer as to why/when](https://github.com/sindresorhus/ama/issues/479) and [further rational here](https://www.twilio.com/blog/lockfiles-nodejs)
+- Remove `package-lock.json` [good explainer as to why/when](https://github.com/sindresorhus/ama/issues/479) and [further rationale here](https://www.twilio.com/blog/lockfiles-nodejs)
+- Fixes module instantiation issues in testing scenarios
+
+---
 
 ## [1.1.6 - 1.1.7] 2020-02-05
 
