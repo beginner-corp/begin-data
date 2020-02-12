@@ -8,7 +8,7 @@ let createKey = require('../helpers/_create-key')
 let validate = require('../helpers/_validate')
 let unfmt = require('../helpers/_unfmt')
 let fmt = require('../helpers/_fmt')
-let getDoc = require('../helpers/_get-doc')
+let dynamo = require('../helpers/_dynamo').doc
 
 /**
  * Write a document
@@ -29,8 +29,8 @@ module.exports = function one(params, callback) {
         else callback(null, TableName, Item)
       })
     },
-    function _getDoc(TableName, Item, callback) {
-      getDoc(function done(err, doc) {
+    function _dynamo(TableName, Item, callback) {
+      dynamo(function done(err, doc) {
         if (err) callback(err)
         else callback(null, TableName, Item, doc)
       })

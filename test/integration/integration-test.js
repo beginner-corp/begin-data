@@ -1,5 +1,5 @@
 let sandbox = require('@architect/sandbox')
-let data = require('../.')
+let data = require('../../.')
 let test = require('tape')
 
 
@@ -63,7 +63,7 @@ test('destroy', async t=> {
   t.plan(2)
 
   let junk = await data.set({table:'junk', noop:true})
-  t.ok(junk.hasOwnProperty('key'), 'table now has a key')
+  t.ok(junk['key'], 'table now has a key')
 
   await data.destroy(junk)
   let count = await data.count({table:'junk'})
@@ -269,15 +269,15 @@ test('using multiple tables to get range queries (aka sort key)', async t=> {
   let indices = await data.get({table: 'games'})
   t.ok(indices.length > 0, 'indices')
   console.log(indices)
-  
+
   // can retrive by key
-  let game = await data.get({table: 'hockey', key: '2019-09-21-canucks-at-kings'}) 
+  let game = await data.get({table: 'hockey', key: '2019-09-21-canucks-at-kings'})
   t.ok(!!game.title, game.title)
 
   // can retrieve by sport
-  let curling = await data.get({table: 'curling'}) 
+  let curling = await data.get({table: 'curling'})
   t.ok(curling.length === 0, 'no curling games in data')
-  
+
   // can retrieve by date!!
   let sept = await data.get({table: 'hockey', begin: '2019-09'}) // 🆕
   t.ok(sept.length === 4, 'four games in sept')

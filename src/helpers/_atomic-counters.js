@@ -4,7 +4,7 @@
  * @module decr
  */
 let waterfall = require('run-waterfall')
-let getDoc = require('./_get-doc')
+let dynamo = require('./_dynamo').doc
 let getTableName = require('./_get-table-name')
 let getKey = require('./_get-key')
 
@@ -34,8 +34,8 @@ function atomic(isIncr, params, callback) {
   }
   waterfall([
     getTableName,
-    function _getDoc(TableName, callback) {
-      getDoc(function done(err, doc) {
+    function _dynamo(TableName, callback) {
+      dynamo(function done(err, doc) {
         if (err) callback(err)
         else callback(null, TableName, doc)
       })
