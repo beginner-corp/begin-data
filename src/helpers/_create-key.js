@@ -4,15 +4,15 @@
  */
 let waterfall = require('run-waterfall')
 let getTableName = require('./_get-table-name')
-let getDB = require('./_get-db')
+let dynamo = require('./_dynamo').db
 let Hashids = require('@begin/hashid')
 let hash = new Hashids
 
 module.exports = function createKey(table, callback) {
   waterfall([
     getTableName,
-    function _getDB(TableName, callback) {
-      getDB(function done(err, db) {
+    function _dynamo(TableName, callback) {
+      dynamo(function done(err, db) {
         if (err) callback(err)
         else callback(null, TableName, db)
       })

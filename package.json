@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src --ignore-pattern node_modules --fix",
-    "test": "npm run lint && tape test/test.js | tap-spec",
+    "test:unit": "cross-env PORT=6666 NODE_ENV=testing tape test/unit/**/*-test.js test/unit/**/**/*-test.js | tap-spec",
+    "test:integration": "cross-env PORT=6666 NODE_ENV=testing tape test/integration/*-test.js | tap-spec",
+    "test": "npm run lint && npm run test:integration && npm run test:unit",
     "rc": "npm version prerelease --preid RC"
   },
   "license": "Apache-2.0",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@architect/sandbox": "^1.6.1",
+    "cross-env": "^7.0.0",
     "eslint": "^6.8.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.13.0"

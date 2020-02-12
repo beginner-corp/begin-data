@@ -4,7 +4,7 @@
 let waterfall = require('run-waterfall')
 let getTableName = require('./helpers/_get-table-name')
 let getKey = require('./helpers/_get-key')
-let getDoc = require('./helpers/_get-doc')
+let dynamo = require('./helpers/_dynamo').doc
 
 /**
  * Get document count for given table
@@ -26,8 +26,8 @@ module.exports = function count({table}, callback) {
   let {scopeID, dataID} = getKey({table, key:'UNKNOWN'})
   waterfall([
     getTableName,
-    function _getDoc(TableName, callback) {
-      getDoc(function done(err, doc) {
+    function _dynamo(TableName, callback) {
+      dynamo(function done(err, doc) {
         if (err) callback(err)
         else callback(null, TableName, doc)
       })
