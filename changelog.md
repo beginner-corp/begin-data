@@ -2,13 +2,24 @@
 
 ---
 
-## [1.2.0] 2020-02-09
+## [1.2.0] 2020-02-12
+
+### Added
 
 - Increase soft row size limit to 200KB
-- Refactor private helper modules into `src/helpers`
-- Move from `hashids` to `@begin/hashids` to keep the package weight down
-- Remove `package-lock.json` [good explainer as to why/when](https://github.com/sindresorhus/ama/issues/479) and [further rationale here](https://www.twilio.com/blog/lockfiles-nodejs)
-- Fixes module instantiation issues in testing scenarios
+- Added some nice performance improvements related to connection reuse in live AWS
+
+
+### Changed
+
+- Refactored private helper modules into `src/helpers`
+- Moved from `hashids` to `@begin/hashids` to keep the package weight down
+- Removed `package-lock.json` [good explainer as to why/when](https://github.com/sindresorhus/ama/issues/479) and [further rationale here](https://www.twilio.com/blog/lockfiles-nodejs)
+
+
+### Fixed
+
+- Fixed module instantiation issues in testing scenarios
 
 ---
 
