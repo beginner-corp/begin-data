@@ -45,9 +45,10 @@ function atomic(isIncr, params, callback) {
       doc.update({
         TableName,
         Key: getKey({table, key}),
-        UpdateExpression: `set ${prop} = ${prop} ${isIncr?'+':'-'} :val`,
+        UpdateExpression: `SET ${prop} = if_not_exists(${prop}, :zero) ${isIncr?'+':'-'} :val`,
         ExpressionAttributeValues:{
-          ':val': 1
+          ':val': 1,
+          ':zero': 0
         },
         ReturnValues: 'ALL_NEW'
       }, callback)

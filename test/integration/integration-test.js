@@ -158,12 +158,6 @@ test('incr/decr', async t=> {
   let key = 'trees'
   let prop = 'mycount'
 
-  await data.set({
-    table,
-    key,
-    mycount:0
-  })
-
   let adds = await data.incr({table, key, prop})
   t.ok(adds.mycount === 1, 'is one')
 

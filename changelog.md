@@ -2,12 +2,13 @@
 
 ---
 
-## [1.2.0] 2020-02-12
+## [1.2.0 - 1.2.1] 2020-02-12 - 2020-04-13
 
 ### Added
 
 - Increase soft row size limit to 200KB
 - Added some nice performance improvements related to connection reuse in live AWS
+- `incr` and `decr` now set the default property value to be incremented or decremented to zero
 
 
 ### Changed
