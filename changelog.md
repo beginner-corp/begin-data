@@ -2,7 +2,7 @@
 
 ---
 
-## [1.2.0 - 1.2.1] 2020-02-12 - 2020-04-13
+## [1.2.0 - 1.2.2] 2020-02-12 - 2020-04-19
 
 ### Added
 
@@ -10,6 +10,9 @@
 - Added some nice performance improvements related to connection reuse in live AWS
 - `incr` and `decr` now set the default property value to be incremented or decremented to zero
 
+### Fixed
+
+- `get` will no longer return rows for tables with same leading characters (see smallwins/begin-issues#20)
 
 ### Changed
 

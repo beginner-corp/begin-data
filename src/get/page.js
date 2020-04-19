@@ -61,7 +61,8 @@ module.exports = function page(params, callback) {
   function paged(err, result) {
     if (err) callback(err)
     else {
-      let returns = result.Items.map(unfmt)
+      let exact = item=> item.table === params.table
+      let returns = result.Items.map(unfmt).filter(exact)
       if (result.LastEvaluatedKey)
         returns.cursor = Buffer.from(JSON.stringify(result.LastEvaluatedKey)).toString('base64')
       callback(null, returns)
