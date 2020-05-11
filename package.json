@@ -28,7 +28,7 @@
   "devDependencies": {
     "@architect/sandbox": "^1.7.0",
     "cross-env": "^7.0.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "tap-spec": "^5.0.0",
     "tape": "^4.13.0"
   },
