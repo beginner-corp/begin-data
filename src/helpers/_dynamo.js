@@ -24,7 +24,7 @@ function getDynamo (type, callback) {
       rejectUnauthorized: true,
     })
     aws.config.update({
-      httpOptions: {agent}
+      httpOptions: { agent }
     })
     // TODO? migrate to using `AWS_NODEJS_CONNECTION_REUSE_ENABLED`?
   }

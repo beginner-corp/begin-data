@@ -11,18 +11,18 @@
 let parse = require('@architect/parser')
 let join = require('path').join
 let fs = require('fs')
-let read = p=> fs.readFileSync(p).toString()
+let read = p => fs.readFileSync(p).toString()
 let exists = fs.existsSync
 let table = false // cache between invocations
 
-module.exports = function getTableName() {
+module.exports = function getTableName () {
 
   if (table)
     return table
 
   let raw
   let arc
-  let env = process.env.NODE_ENV === 'testing'? 'staging' : process.env.NODE_ENV
+  let env = process.env.NODE_ENV === 'testing' ? 'staging' : process.env.NODE_ENV
   let cwd = process.cwd()
   let arcDefaultPath = join(cwd, '.arc')
   let appDotArcPath = join(cwd, 'app.arc')

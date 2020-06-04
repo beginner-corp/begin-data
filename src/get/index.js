@@ -11,7 +11,7 @@ let page = require('./page')
  * @param {callback} errback - optional Node style error first callback
  * @returns {promise} promise - if no callback is supplied a promise is returned
  */
-module.exports = function get(params, callback) {
+module.exports = function get (params, callback) {
 
   // offload actual impl to each function
   if (Array.isArray(params)) {

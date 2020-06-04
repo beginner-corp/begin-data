@@ -4,6 +4,8 @@
   "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB",
   "main": "src/index.js",
   "scripts": {
+    "deno:fmt": "deno fmt src/deno",
+    "deno:test": "npm run deno:fmt && deno test -A --unstable src/deno",
     "lint": "eslint src --ignore-pattern node_modules --fix",
     "test:unit": "cross-env PORT=6666 NODE_ENV=testing tape test/unit/**/*-test.js test/unit/**/**/*-test.js | tap-spec",
     "test:integration": "cross-env PORT=6666 NODE_ENV=testing tape test/integration/*-test.js | tap-spec",
@@ -26,6 +28,7 @@
     "run-waterfall": "^1.1.6"
   },
   "devDependencies": {
+    "@architect/eslint-config": "0.0.1",
     "@architect/sandbox": "^1.7.0",
     "cross-env": "^7.0.0",
     "eslint": "^6.8.0",

@@ -8,7 +8,7 @@ let get = require('./get')
  * @param {string} limit
  * @returns {asyncIterable}
  */
-module.exports = function page(props) {
+module.exports = function page (props) {
 
   if (!props.table)
     throw ReferenceError('Missing params.table')
@@ -16,7 +16,7 @@ module.exports = function page(props) {
   let cursor = false
   let finished = false
 
-  function next() {
+  function next () {
 
     // signal completion
     if (finished) {
@@ -26,31 +26,31 @@ module.exports = function page(props) {
     }
 
     // copy in props each invocation (limit and table)
-    let params = {...props}
+    let params = { ...props }
 
     // if the cursor is truthy add that value to params
     if (cursor)
       params.cursor = cursor
 
-    return new Promise(function sigh(resolve, reject) {
-      get(params, function got(err, result) {
+    return new Promise(function sigh (resolve, reject) {
+      get(params, function got (err, result) {
         if (err) {
           reject(err)
         }
         else if (result && result.cursor) {
           cursor = result.cursor
-          resolve({value: result, done: false})
+          resolve({ value: result, done: false })
         }
         else {
           finished = true // important! and weird yes. we'll miss the last page otherwise
-          resolve({value: result, done: false})
+          resolve({ value: result, done: false })
         }
       })
     })
   }
 
   // yay
-  let asyncIterator = {next}
+  let asyncIterator = { next }
   let asyncIterable = {
     [Symbol.asyncIterator]: () => asyncIterator
   }

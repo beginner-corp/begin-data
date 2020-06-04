@@ -8,17 +8,17 @@ let dynamo = require('./_dynamo').doc
 let getTableName = require('./_get-table-name')
 let getKey = require('./_get-key')
 
-let incr = (params, callback)=> atomic(true, params, callback)
-let decr = (params, callback)=> atomic(false, params, callback)
+let incr = (params, callback) => atomic(true, params, callback)
+let decr = (params, callback) => atomic(false, params, callback)
 
 /**
  * atomic incr/decr
  */
-module.exports = {incr, decr}
+module.exports = { incr, decr }
 
-function atomic(isIncr, params, callback) {
+function atomic (isIncr, params, callback) {
 
-  let {table, key, prop} = params
+  let { table, key, prop } = params
   if (!table) throw ReferenceError('Missing param: table')
   if (!key) throw ReferenceError('Missing param: key')
   if (!prop) throw ReferenceError('Missing param: prop')
@@ -26,27 +26,27 @@ function atomic(isIncr, params, callback) {
   // backfill the async adventure du jour
   let promise
   if (!callback) {
-    promise = new Promise(function(res, rej) {
-      callback = function _errback(err, result) {
+    promise = new Promise(function (res, rej) {
+      callback = function _errback (err, result) {
         err ? rej(err) : res(result)
       }
     })
   }
   waterfall([
     getTableName,
-    function _dynamo(TableName, callback) {
-      dynamo(function done(err, doc) {
+    function _dynamo (TableName, callback) {
+      dynamo(function done (err, doc) {
         if (err) callback(err)
         else callback(null, TableName, doc)
       })
     },
-    function update(TableName, doc, callback) {
+    function update (TableName, doc, callback) {
       // perform the atomic update and callback w the updated values
       doc.update({
         TableName,
-        Key: getKey({table, key}),
-        UpdateExpression: `SET ${prop} = if_not_exists(${prop}, :zero) ${isIncr?'+':'-'} :val`,
-        ExpressionAttributeValues:{
+        Key: getKey({ table, key }),
+        UpdateExpression: `SET ${prop} = if_not_exists(${prop}, :zero) ${isIncr ? '+' : '-'} :val`,
+        ExpressionAttributeValues: {
           ':val': 1,
           ':zero': 0
         },
@@ -54,7 +54,7 @@ function atomic(isIncr, params, callback) {
       }, callback)
     }
   ],
-  function updated(err, result) {
+  function updated (err, result) {
     if (err) callback(err)
     else {
       callback(null, result.Attributes)

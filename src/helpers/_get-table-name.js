@@ -2,7 +2,7 @@ let getTableNameForSandbox = require('./_get-table-name-sandbox')
 let getTableNameForArc6 = require('./_get-table-name-ssm')
 let olds = require('./_get-table-name-old')
 
-module.exports = function _getTableName(callback) {
+module.exports = function _getTableName (callback) {
 
   let override = process.env.BEGIN_DATA_TABLE_NAME
   let sandbox = process.env.NODE_ENV === 'testing'

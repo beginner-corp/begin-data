@@ -5,14 +5,14 @@ let parse = require('@architect/parser')
 /**
  * Arc 6+ paths where project manifest needs to be read from root
  */
-module.exports = function getTableName() {
+module.exports = function getTableName () {
   let arc = readLocalArc()
-  if (arc.tables && arc.tables.some(t=> Object.keys(t)[0] === 'data'))
+  if (arc.tables && arc.tables.some(t => Object.keys(t)[0] === 'data'))
     return `${arc.app[0]}-staging-data`
   throw ReferenceError('@tables not defined! begin/data expects a data table')
 }
 
-function read(filepath, type) {
+function read (filepath, type) {
   let arc = fs.readFileSync(filepath).toString()
   if (type === 'arc')
     return parse(arc)
@@ -23,7 +23,7 @@ function read(filepath, type) {
   throw Error('unknown arc type')
 }
 
-function readLocalArc() {
+function readLocalArc () {
   let selfDiagnostic = path.join(process.cwd(), '.arc')
   let arcInRoot = path.join(process.cwd(), '..', '..', '..', '.arc')
   let appArcInRoot = path.join(process.cwd(), '..', '..', '..', 'app.arc')

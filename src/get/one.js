@@ -13,25 +13,25 @@ let dynamo = require('../helpers/_dynamo').doc
  * @param {object} params - The {table, key} of documents to read
  * @param {callback} errback - Node style error first callback
  */
-module.exports = function one(params, callback) {
+module.exports = function one (params, callback) {
   // boilerplague
   let promise
   if (!callback) {
-    promise = new Promise(function(res, rej) {
-      callback = function _errback(err, result) {
+    promise = new Promise(function (res, rej) {
+      callback = function _errback (err, result) {
         err ? rej(err) : res(result)
       }
     })
   }
   waterfall([
     getTableName,
-    function _dynamo(TableName, callback) {
-      dynamo(function done(err, doc) {
+    function _dynamo (TableName, callback) {
+      dynamo(function done (err, doc) {
         if (err) callback(err)
         else callback(null, TableName, doc)
       })
     },
-    function gets(TableName, doc, callback) {
+    function gets (TableName, doc, callback) {
       let Key = getKey(params)
       doc.get({
         TableName,
@@ -39,7 +39,7 @@ module.exports = function one(params, callback) {
       }, callback)
     }
   ],
-  function gots(err, result) {
+  function gots (err, result) {
     if (err) callback(err)
     else callback(null, unfmt(result.Item))
   })

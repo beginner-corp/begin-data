@@ -8,19 +8,19 @@ let getKey = require('../helpers/_get-key')
 let unfmt = require('../helpers/_unfmt')
 let dynamo = require('../helpers/_dynamo').doc
 
-let badKey = i=> !(i['table'] && i['key'])
+let badKey = i => !(i['table'] && i['key'])
 
 /**
  * Read an array of documents
  * @param {array} params - The [{table, key}] of documents to read
  * @param {callback} errback - Node style error first callback
  */
-module.exports = function batch(Keys, callback) {
+module.exports = function batch (Keys, callback) {
   // boilerplague
   let promise
   if (!callback) {
-    promise = new Promise(function(res, rej) {
-      callback = function _errback(err, result) {
+    promise = new Promise(function (res, rej) {
+      callback = function _errback (err, result) {
         err ? rej(err) : res(result)
       }
     })
@@ -32,16 +32,16 @@ module.exports = function batch(Keys, callback) {
   else {
     waterfall([
       getTableName,
-      function _dynamo(TableName, callback) {
-        dynamo(function done(err, doc) {
+      function _dynamo (TableName, callback) {
+        dynamo(function done (err, doc) {
           if (err) callback(err)
           else callback(null, TableName, doc)
         })
       },
-      function gets(table, doc, callback) {
-        let query = {RequestItems:{}}
-        query.RequestItems[table] = {Keys: Keys.map(getKey)}
-        doc.batchGet(query, function gots(err, result) {
+      function gets (table, doc, callback) {
+        let query = { RequestItems: {} }
+        query.RequestItems[table] = { Keys: Keys.map(getKey) }
+        doc.batchGet(query, function gots (err, result) {
           if (err) callback(err)
           else {
             callback(null, result.Responses[table].map(unfmt))

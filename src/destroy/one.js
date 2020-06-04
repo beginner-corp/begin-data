@@ -12,16 +12,16 @@ let dynamo = require('../helpers/_dynamo').doc
  * @param {object} params - The {table, key} of the document to destroy
  * @param {callback} errback - Node style error first callback
  */
-module.exports = function one(params, callback) {
+module.exports = function one (params, callback) {
   waterfall([
     getTableName,
-    function _dynamo(TableName, callback) {
-      dynamo(function done(err, doc) {
+    function _dynamo (TableName, callback) {
+      dynamo(function done (err, doc) {
         if (err) callback(err)
         else callback(null, TableName, doc)
       })
     },
-    function destroys(TableName, doc, callback) {
+    function destroys (TableName, doc, callback) {
       let Key = getKey(params)
       doc.delete({
         TableName,

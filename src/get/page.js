@@ -13,13 +13,13 @@ let dynamo = require('../helpers/_dynamo').doc
  * @param {object} params - The {table, [cursor]} of documents to read
  * @param {callback} errback - Node style error first callback
  */
-module.exports = function page(params, callback) {
+module.exports = function page (params, callback) {
 
   // boilerplague
   let promise
   if (!callback) {
-    promise = new Promise(function(res, rej) {
-      callback = function _errback(err, result) {
+    promise = new Promise(function (res, rej) {
+      callback = function _errback (err, result) {
         err ? rej(err) : res(result)
       }
     })
@@ -27,16 +27,16 @@ module.exports = function page(params, callback) {
 
   waterfall([
     getTableName,
-    function _dynamo(TableName, callback) {
-      dynamo(function done(err, doc) {
+    function _dynamo (TableName, callback) {
+      dynamo(function done (err, doc) {
         if (err) callback(err)
         else callback(null, TableName, doc)
       })
     },
-    function pager(TableName, doc, callback) {
+    function pager (TableName, doc, callback) {
 
       params.key = params.begin || 'UNKNOWN'
-      let {scopeID, dataID} = getKey(params)
+      let { scopeID, dataID } = getKey(params)
       dataID = dataID.replace('#UNKNOWN', '')
 
       let query = {
@@ -58,10 +58,10 @@ module.exports = function page(params, callback) {
       doc.query(query, callback)
     },
   ],
-  function paged(err, result) {
+  function paged (err, result) {
     if (err) callback(err)
     else {
-      let exact = item=> item.table === params.table
+      let exact = item => item.table === params.table
       let returns = result.Items.map(unfmt).filter(exact)
       if (result.LastEvaluatedKey)
         returns.cursor = Buffer.from(JSON.stringify(result.LastEvaluatedKey)).toString('base64')

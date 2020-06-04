@@ -12,31 +12,31 @@ let dynamo = require('../helpers/_dynamo').doc
  * @param {array} params - The [{table, key}] of documents to destroy
  * @param {callback} errback - Node style error first callback
  */
-module.exports = function batch(params, callback) {
+module.exports = function batch (params, callback) {
 
   // ensure we have tables and keys
-  let hasBads = params.some(i=> !i['table'] || !i['key'])
+  let hasBads = params.some(i => !i['table'] || !i['key'])
   if (hasBads)
     throw ReferenceError('Missing table in params')
 
   // do batch
   waterfall([
     getTableName,
-    function _dynamo(TableName, callback) {
-      dynamo(function done(err, doc) {
+    function _dynamo (TableName, callback) {
+      dynamo(function done (err, doc) {
         if (err) callback(err)
         else callback(null, TableName, doc)
       })
     },
-    function destroys(TableName, doc, callback) {
-      let req = Key=> ({DeleteRequest: {Key}})
+    function destroys (TableName, doc, callback) {
+      let req = Key => ({ DeleteRequest: { Key } })
       let batch = params.map(getKey).map(req)
-      let query = {RequestItems:{}}
+      let query = { RequestItems: {} }
       query.RequestItems[TableName] = batch
       doc.batchWrite(query, callback)
     }
   ],
-  function destroyed(err) {
+  function destroyed (err) {
     if (err) callback(err)
     else callback()
   })
