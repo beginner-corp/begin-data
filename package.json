@@ -1,6 +1,6 @@
 {
   "name": "@begin/data",
-  "version": "1.2.2",
+  "version": "1.2.3-RC.0",
   "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB",
   "main": "src/index.js",
   "scripts": {
@@ -20,15 +20,15 @@
     "url": "https://github.com/smallwins/begin-issues/issues"
   },
   "dependencies": {
-    "@architect/parser": "^2.0.1",
+    "@architect/parser": "^2.1.5",
     "@begin/hashid": "^1.0.0",
     "run-parallel": "^1.1.9",
     "run-waterfall": "^1.1.6"
   },
   "devDependencies": {
-    "@architect/sandbox": "^1.7.0",
-    "cross-env": "^7.0.0",
-    "eslint": "^7.2.0",
+    "@architect/sandbox": "^1.12.6",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.3.1",
     "tap-spec": "^5.0.0",
     "tape": "^5.0.1"
   },
