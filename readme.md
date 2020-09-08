@@ -145,6 +145,20 @@ await data.destroy([
 ])
 ```
 
+## Pagination
+
+Large sets of data can not be retrieved in one call because the underlying `get` api paginates results.
+In this case use the `for await` syntax with a limit set to get paginated data.
+
+```
+let pages = data.page({ table:'ppl', limit:25 })
+let count = 0  
+for await (let page of pages) {
+  console.log(page)
+  count++
+}
+```
+
 ## Additional Superpowers
 
 - Documents can be expired by setting `ttl` to an UNIX epoch in the future.
