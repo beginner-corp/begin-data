@@ -15,7 +15,7 @@ Optionally a document can also have a `ttl` property with a UNIX epoch value rep
 
 Begin Data operates on one DynamoDB table named `data` with a partition key `scopeID` and a sort key of `dataID` (and, optionally, a `ttl` for expiring documents).
 
-Example `.arc`:
+Example `app.arc`:
 
 ```
 @app
