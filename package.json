@@ -26,7 +26,7 @@
     "run-waterfall": "^1.1.6"
   },
   "devDependencies": {
-    "@architect/sandbox": "^1.12.6",
+    "@architect/sandbox": "^3.1.2",
     "cross-env": "^7.0.2",
     "eslint": "^7.3.1",
     "tap-spec": "^5.0.0",
