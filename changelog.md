@@ -2,6 +2,14 @@
 
 ---
 
+## [1.2.3] 2020-06-27
+
+### Fixed
+
+- Fixed local file path issue for loading Architect project manifests that aren't `.arc` (e.g. `app.arc`, `arc.yaml`, etc.)
+
+---
+
 ## [1.2.0 - 1.2.2] 2020-02-12 - 2020-04-19
 
 ### Added

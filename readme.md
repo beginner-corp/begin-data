@@ -15,7 +15,7 @@ Optionally a document can also have a `ttl` property with a UNIX epoch value rep
 
 Begin Data operates on one DynamoDB table named `data` with a partition key `scopeID` and a sort key of `dataID` (and, optionally, a `ttl` for expiring documents).
 
-Example `.arc`:
+Example `app.arc`:
 
 ```
 @app
@@ -143,6 +143,20 @@ await data.destroy([
   {table:'tacos', key:'carnitas'},
   {table:'tacos', key:'al-pastor'},
 ])
+```
+
+## Pagination
+
+Large sets of data can not be retrieved in one call because the underlying `get` api paginates results.
+In this case use the `for await` syntax with a limit set to get paginated data.
+
+```javascript
+let pages = data.page({ table:'ppl', limit:25 })
+let count = 0  
+for await (let page of pages) {
+  console.log(page)
+  count++
+}
 ```
 
 ## Additional Superpowers
