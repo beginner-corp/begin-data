@@ -21,11 +21,9 @@ test('env', t=> {
 /**
  * sandbox boilerplate
  */
-let end
 test('start sandbox', async t=> {
   t.plan(1)
-  end = await sandbox.start()
-  console.log(end)
+  await sandbox.start()
   t.ok(true, 'started')
 })
 
@@ -296,16 +294,16 @@ test('paginate ten at a time', async t=> {
 })
 
 // fin
-test('shutdown sandbox', t=> {
+test('shutdown sandbox', async t=> {
   t.plan(1)
-  end()
+  await sandbox.end()
   t.ok(true, 'done')
 })
 
 
 // ensure clean exit even on hanging async work
-process.on('unhandledRejection', (reason, p) => {
+process.on('unhandledRejection', async (reason, p) => {
   console.log(reason)
   console.log(p)
-  end()
+  await sandbox.end()
 })
