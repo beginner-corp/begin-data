@@ -150,17 +150,25 @@ test('batch get', async t=> {
  * incr/decr an item
  */
 test('incr/decr', async t=> {
-  t.plan(2)
+  t.plan(10)
 
   let table = 'things-i-like'
   let key = 'trees'
   let prop = 'mycount'
 
-  let adds = await data.incr({table, key, prop})
-  t.ok(adds.mycount === 1, 'is one')
+  let incrRes = await data.incr({table, key, prop})
+  t.ok(incrRes.mycount === 1, 'incrRes is one')
+  t.ok(incrRes.table === table, 'incrRes.table is correct')
+  t.ok(incrRes.key === key, 'incrRes.key is correct')
+  t.ok(incrRes.scopeID === undefined, 'incrRes.scopeID is undefined')
+  t.ok(incrRes.dataID === undefined, 'incrRes.dataID is undefined')
 
-  let minuses = await data.decr({table, key, prop})
-  t.ok(minuses.mycount === 0, 'and done')
+  let decrRes = await data.decr({table, key, prop})
+  t.ok(decrRes.mycount === 0, 'decrRes is zero')
+  t.ok(decrRes.table === table, 'decrRes.table is correct')
+  t.ok(decrRes.key === key, 'decrRes.key is correct')
+  t.ok(decrRes.scopeID === undefined, 'decrRes.scopeID is undefined')
+  t.ok(decrRes.dataID === undefined, 'decrRes.dataID is undefined')
 })
 
 

@@ -7,6 +7,7 @@ let waterfall = require('run-waterfall')
 let dynamo = require('./_dynamo').doc
 let getTableName = require('./_get-table-name')
 let getKey = require('./_get-key')
+let unfmt = require('./_unfmt')
 
 let incr = (params, callback) => atomic(true, params, callback)
 let decr = (params, callback) => atomic(false, params, callback)
@@ -57,7 +58,7 @@ function atomic (isIncr, params, callback) {
   function updated (err, result) {
     if (err) callback(err)
     else {
-      callback(null, result.Attributes)
+      callback(null, unfmt(result.Attributes))
     }
   })
   // this is fine
