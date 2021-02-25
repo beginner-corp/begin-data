@@ -1,6 +1,5 @@
 let getTableNameForSandbox = require('./_get-table-name-sandbox')
 let getTableNameForArc6 = require('./_get-table-name-ssm')
-let olds = require('./_get-table-name-old')
 
 module.exports = function _getTableName (callback) {
 
@@ -24,7 +23,7 @@ module.exports = function _getTableName (callback) {
   }
   else if (arc5) {
     // take teh old town road
-    callback(null, olds())
+    throw Error('arc5 unsupported; please downgrade to begin/data@1.x')
   }
   else {
     throw ReferenceError('begin/data could not find the data table')
