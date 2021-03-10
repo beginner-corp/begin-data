@@ -7,8 +7,10 @@ let read = require('@architect/inventory/src/read')
  * Arc 6+ paths where project manifest needs to be read from root
  */
 module.exports = function getTableName () {
-
-  let cwd = process.cwd()
+  let config = process.env.__ARC_CONFIG__
+  let cwd = process.env.NODE_ENV === 'testing'
+    ? config && JSON.parse(config).projectSrc
+    : process.cwd()
   let type = 'projectManifest'
   let err = ReferenceError('@tables not defined! begin/data expects a data table')
 
