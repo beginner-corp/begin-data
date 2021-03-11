@@ -32,9 +32,6 @@ module.exports = function getTableName () {
   function getLocalDataTable (type, cwd) {
     // attempt to read the arcfile
     let { arc } = read({ type, cwd })
-    console.log('============================')
-    console.log('ARC:::: \n', arc)
-    console.log('============================')
     return hasDataTable(arc)
       // return the local table
       ? `${arc.app[0]}-staging-data`
