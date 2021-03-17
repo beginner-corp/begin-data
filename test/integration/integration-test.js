@@ -2,7 +2,6 @@ let sandbox = require('@architect/sandbox')
 let data = require('../../.')
 let test = require('tape')
 
-
 /**
  * ensure the api is present
  */
