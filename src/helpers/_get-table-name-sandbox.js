@@ -9,7 +9,7 @@ module.exports = async function getTableName () {
   if (process.env.ARC_ENV === 'testing' ||
       process.env.NODE_ENV === 'testing') {
     try {
-      let result = await tiny.get({ url: '/_asdf' })
+      let result = await tiny.get({ url: '/_asd' })
       let services = result.body
       if (services.tables.data) {
         return services.tables.data
