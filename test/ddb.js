@@ -1,5 +1,5 @@
 let test = require('tape')
-let file = '../../../../src/helpers/_dynamo'
+let file = '../src/helpers/_dynamo'
 let dynamo
 let env = process.env.NODE_ENV
 

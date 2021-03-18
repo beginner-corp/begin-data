@@ -1,6 +1,9 @@
 @app
 begin-data
 
+# do not remove.
+@http
+
 @tables
 data
   scopeID *String # allows for iam isolated collections

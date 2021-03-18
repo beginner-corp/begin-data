@@ -15,7 +15,7 @@ module.exports = function _getTableName (callback) {
   }
   else if (sandbox) {
     // read .arc, app.arc, arc.json or arc.yaml
-    callback(null, getTableNameForSandbox())
+    getTableNameForSandbox(callback)
   }
   else if (arc6) {
     // read SSM param for data table

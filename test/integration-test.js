@@ -1,14 +1,9 @@
 let sandbox = require('@architect/sandbox')
-let data = require('../../.')
+let data = require('../')
 let test = require('tape')
 
-
-/**
- * ensure the api is present
- */
 test('env', t=> {
   t.plan(6)
-  //t.ok(arc.sandbox, 'arc.sandbox')
   t.ok(data.get, 'data.get')
   t.ok(data.set, 'data.set')
   t.ok(data.destroy, 'data.destroy')
@@ -17,21 +12,15 @@ test('env', t=> {
   t.ok(data.decr, 'data.decr')
 })
 
-
-/**
- * sandbox boilerplate
- */
 test('start sandbox', async t=> {
   t.plan(1)
   await sandbox.start()
   t.ok(true, 'started')
 })
 
-/**
- * try out the basic reads
- */
 test('get a key that does not exist returns null', async t=> {
   t.plan(1)
+  console.log('port: ', process.env.PORT)
   let result = await data.get({table:'foo', key:'nooo'})
   t.equal(result, null, 'non existent key returns null')
 })
@@ -54,9 +43,6 @@ test('set/get/count', async t=> {
 })
 
 
-/**
- * destroy an item via key
- */
 test('destroy', async t=> {
   t.plan(2)
 
@@ -69,9 +55,6 @@ test('destroy', async t=> {
 })
 
 
-/**
- * batch write a bunch of items
- */
 test('batch set (across multiple tables)', async t=> {
   t.plan(2)
 
@@ -90,10 +73,7 @@ test('batch set (across multiple tables)', async t=> {
 })
 
 
-/**
- * limit batch to 25 items (we can expand this to stream in the future)
- */
-test('set batch max exceeded', async t=> {
+test('limit batch to 25 items', async t=> {
   t.plan(1)
 
   let things = []
@@ -109,10 +89,6 @@ test('set batch max exceeded', async t=> {
   }
 })
 
-
-/**
- * batch destroy removes many items at once
- */
 test('batch destroy', async t=> {
   t.plan(1)
 
@@ -126,9 +102,6 @@ test('batch destroy', async t=> {
 })
 
 
-/**
- * batch get many items at once
- */
 test('batch get', async t=> {
   t.plan(1)
 
@@ -146,9 +119,6 @@ test('batch get', async t=> {
 })
 
 
-/**
- * incr/decr an item
- */
 test('incr/decr', async t=> {
   t.plan(10)
 
@@ -172,9 +142,6 @@ test('incr/decr', async t=> {
 })
 
 
-/**
- * cursor pagination
- */
 test('node8.10 cursor style pagination', async t=> {
   t.plan(4)
 
@@ -205,10 +172,6 @@ test('node8.10 cursor style pagination', async t=> {
   t.ok(typeof result2.cursor === 'undefined', 'and no cursor')
 })
 
-
-/**
- * scanning items
- */
 test('implementing a scan', t=> {
   t.plan(1)
 
@@ -248,9 +211,6 @@ test('implementing a scan', t=> {
   })
 })
 
-/**
- *
- */
 test('using multiple tables to get range queries (aka sort key)', async t=> {
   t.plan(4)
 
@@ -284,9 +244,6 @@ test('using multiple tables to get range queries (aka sort key)', async t=> {
   console.log(sept)
 })
 
-/**
- * node 10.x for await of syntax
- */
 test('paginate ten at a time', async t=> {
   t.plan(1)
 
@@ -307,7 +264,6 @@ test('shutdown sandbox', async t=> {
   await sandbox.end()
   t.ok(true, 'done')
 })
-
 
 // ensure clean exit even on hanging async work
 process.on('unhandledRejection', async (reason, p) => {
