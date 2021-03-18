@@ -12,10 +12,10 @@
   "homepage": "https://begin.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/smallwins/begin-data.git"
+    "url": "https://github.com/beginner-corp/begin-data.git"
   },
   "bugs": {
-    "url": "https://github.com/smallwins/begin-issues/issues"
+    "url": "https://github.com/beginner-corp/begin-issues/issues"
   },
   "dependencies": {
     "@architect/inventory": "^1.2.3",
