@@ -1,9 +1,8 @@
 @app
 begin-data
 
+# do not remove.
 @http
-get /
-get /foo
 
 @tables
 data
