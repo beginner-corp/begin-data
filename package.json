@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src --ignore-pattern node_modules --fix",
-    "test": "npm run lint && cross-env tape test/*-test.js | tap-spec",
+    "test": "npm run lint && tape test/*-test.js | tap-spec",
     "rc": "npm version prerelease --preid RC"
   },
   "license": "Apache-2.0",
@@ -26,7 +26,6 @@
   "devDependencies": {
     "@architect/eslint-config": "0.0.1",
     "@architect/sandbox": "3.3.8",
-    "cross-env": "^7.0.2",
     "eslint": "^7.3.1",
     "tap-spec": "^5.0.0",
     "tape": "^5.0.1",
