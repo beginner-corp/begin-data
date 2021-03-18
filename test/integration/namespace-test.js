@@ -16,7 +16,7 @@ test('tables with similar namespacing', async t=> {
   const result = await data.set([
     { table: USER_TABLE },
     { table: USERNAME_TABLE }
-  ]) 
+  ])
   t.ok(result.length === 2, 'wrote two records into two tables')
   console.log(result)
   // query a table
@@ -35,5 +35,5 @@ test('shutdown sandbox', async t=> {
 process.on('unhandledRejection', (reason, p) => {
   console.log(reason)
   console.log(p)
-  end()
+  sandbox.end()
 })

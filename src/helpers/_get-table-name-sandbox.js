@@ -1,5 +1,7 @@
 let read = require('@architect/inventory/src/read')
 let tiny = require('tiny-json-http')
+let port = process.env.PORT || 3333
+let url = `http://localhost:${port}/_asd`
 /**
  * Arc 6+ paths where project manifest needs to be read from root
  */
@@ -9,7 +11,7 @@ module.exports = async function getTableName () {
   if (process.env.ARC_ENV === 'testing' ||
       process.env.NODE_ENV === 'testing') {
     try {
-      let result = await tiny.get({ url: '/_asd' })
+      let result = await tiny.get({ url })
       let services = result.body
       if (services.tables.data) {
         return services.tables.data
