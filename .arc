@@ -1,6 +1,10 @@
 @app
 begin-data
 
+@http
+get /
+get /foo
+
 @tables
 data
   scopeID *String # allows for iam isolated collections

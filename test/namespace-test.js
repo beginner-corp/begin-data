@@ -1,5 +1,5 @@
 let sandbox = require('@architect/sandbox')
-let data = require('../../.')
+let data = require('../')
 let test = require('tape')
 
 test('start sandbox', async t=> {
