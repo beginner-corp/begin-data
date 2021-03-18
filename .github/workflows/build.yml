@@ -94,7 +94,7 @@ jobs:
 
       # Change package org (@smallwins on GitHub vs @begin on NPM)
       - name: Change package name
-        run: scripts/change-package-name @smallwins/data
+        run: scripts/change-package-name @beginner-corp/data
 
       # Publish to GitHub
       - name: Publish @RC to GitHub
