@@ -3,9 +3,9 @@ let get = require('./get')
 /**
  * paginate a table
  *
- * @param {object} params
- * @param {string} table
- * @param {string} limit
+ * @param {Object} props
+ * @param {string} props.table
+ * @param {number} props.limit
  * @returns {asyncIterable}
  */
 module.exports = function page (props) {
