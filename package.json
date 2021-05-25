@@ -25,7 +25,7 @@
     "tiny-json-http": "^7.3.0"
   },
   "devDependencies": {
-    "@architect/eslint-config": "0.0.1",
+    "@architect/eslint-config": "1.0.0",
     "@architect/sandbox": "3.6.0",
     "eslint": "^7.3.1",
     "tap-spec": "^5.0.0",
