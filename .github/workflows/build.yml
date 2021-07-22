@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 10.x, 12.x, 14.x ]
+        node-version: [ 12.x, 14.x, 16.x ]
         os: [windows-latest, ubuntu-latest, macOS-latest]
 
     # Go
@@ -42,7 +42,7 @@ jobs:
     - name: Notify
       uses: homoluctus/slatify@master
       # Only fire alert once
-      if: github.ref == 'refs/heads/master' && failure() && matrix.node-version == '10.x' && matrix.os == 'ubuntu-latest'
+      if: github.ref == 'refs/heads/master' && failure() && matrix.node-version == '12.x' && matrix.os == 'ubuntu-latest'
       with:
         type: ${{ job.status }}
         job_name: '*Build*'
@@ -67,7 +67,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
           registry-url: https://registry.npmjs.org/
 
       - name: Install
@@ -89,7 +89,7 @@ jobs:
       # Set up Node again, this time using GitHub as the publish target
       - uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
           registry-url: https://npm.pkg.github.com/
 
       # Change package org (@smallwins on GitHub vs @begin on NPM)

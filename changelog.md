@@ -5,6 +5,7 @@
 
 ### Changed
 
+- Breaking change: Begin Data no longer supports Node.js 10 (now EOL, and no longer available to create / update in AWS Lambda)
 - Potentially breaking change: Begin Data now requires `@architect/sandbox` 4.0 or greater for local use
 - Removed Arc v5 deprecation warnings
 - Linted some stuff, tidied up project files
