@@ -1,29 +1,50 @@
-let getTableNameForSandbox = require('./_get-table-name-sandbox')
-let getTableNameForArc6 = require('./_get-table-name-ssm')
+let aws = require('aws-sdk')
+let http = require('http')
+let tablename = false
 
-module.exports = function _getTableName (callback) {
-
+module.exports = function getTableName (callback) {
   let override = process.env.BEGIN_DATA_TABLE_NAME
-  let sandbox = process.env.NODE_ENV === 'testing'
   // ARC_CLOUDFORMATION is present in live AWS deploys with Architect 6+
-  // DEPRECATED + ARC_HTTP are present in 2019+ versions of Sandbox
   let arc6 = process.env.ARC_CLOUDFORMATION || process.env.ARC_HTTP === 'aws_proxy'
-  let arc5 = !process.env.ARC_CLOUDFORMATION || process.env.DEPRECATED
 
   if (override) {
     callback(null, process.env.BEGIN_DATA_TABLE_NAME)
   }
-  else if (sandbox) {
-    // read .arc, app.arc, arc.json or arc.yaml
-    getTableNameForSandbox(callback)
+  // Use cached value
+  else if (tablename) {
+    callback(null, tablename)
   }
   else if (arc6) {
-    // read SSM param for data table
-    getTableNameForArc6(callback)
-  }
-  else if (arc5) {
-    // take teh old town road
-    throw Error('arc5 unsupported; please downgrade to begin/data@1.x')
+    let isLocal = process.env.NODE_ENV === 'testing'
+    let config
+    if (isLocal) {
+      // If running in Sandbox, use its SSM service discovery mock
+      let port = process.env.ARC_INTERNAL || 3332
+      config = {
+        endpoint: new aws.Endpoint(`http://localhost:${port}/_arc/ssm`),
+        region: process.env.AWS_REGION || 'us-west-2',
+        httpOptions: { agent: new http.Agent() }
+      }
+    }
+    let ssm = new aws.SSM(config)
+    let Path = `/${process.env.ARC_CLOUDFORMATION || 'sandbox'}`
+    ssm.getParametersByPath({ Path, Recursive: true }, function done (err, result) {
+      if (err) callback(err)
+      else {
+        let table = param => param.Name.split('/')[2] === 'tables'
+        let tables = result.Parameters.filter(table).reduce((a, b) => {
+          a[b.Name.split('/')[3]] = b.Value
+          return a
+        }, {})
+        if (!tables.data) {
+          callback(ReferenceError('begin/data requires a table named data'))
+        }
+        else {
+          tablename = tables.data
+          callback(null, tablename)
+        }
+      }
+    })
   }
   else {
     throw ReferenceError('begin/data could not find the data table')
