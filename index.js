@@ -7,11 +7,11 @@ let incr = require('./src/incr')
 let decr = require('./src/decr')
 
 module.exports = {
-  get, 
-  set, 
-  destroy, 
+  get,
+  set,
+  destroy,
   page,
   count,
-  incr, 
+  incr,
   decr,
 }
