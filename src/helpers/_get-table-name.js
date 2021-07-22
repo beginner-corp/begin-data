@@ -5,7 +5,6 @@ let tablename = false
 module.exports = function getTableName (callback) {
   let override = process.env.BEGIN_DATA_TABLE_NAME
   // ARC_CLOUDFORMATION is present in live AWS deploys with Architect 6+
-  // DEPRECATED + ARC_HTTP are present in 2019+ versions of Sandbox
   let arc6 = process.env.ARC_CLOUDFORMATION || process.env.ARC_HTTP === 'aws_proxy'
 
   if (override) {
@@ -19,17 +18,16 @@ module.exports = function getTableName (callback) {
     let isLocal = process.env.NODE_ENV === 'testing'
     let config
     if (isLocal) {
-      // If running in sandbox, Sandbox has an SSM service discovery mock, use that
+      // If running in Sandbox, use its SSM service discovery mock
       let port = process.env.ARC_INTERNAL || 3332
-      let region = process.env.AWS_REGION || 'us-west-2'
       config = {
         endpoint: new aws.Endpoint(`http://localhost:${port}/_arc/ssm`),
-        region,
+        region: process.env.AWS_REGION || 'us-west-2',
         httpOptions: { agent: new http.Agent() }
       }
     }
     let ssm = new aws.SSM(config)
-    let Path = `/${process.env.ARC_CLOUDFORMATION}`
+    let Path = `/${process.env.ARC_CLOUDFORMATION || 'sandbox'}`
     ssm.getParametersByPath({ Path, Recursive: true }, function done (err, result) {
       if (err) callback(err)
       else {
