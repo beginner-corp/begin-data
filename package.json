@@ -1,8 +1,8 @@
 {
   "name": "@begin/data",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "lint": "eslint --fix .",
     "test": "npm run lint && tape test/*-test.js | tap-spec",
