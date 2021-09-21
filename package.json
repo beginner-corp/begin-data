@@ -17,18 +17,24 @@
   "bugs": {
     "url": "https://github.com/beginner-corp/begin-issues/issues"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {
     "@begin/hashid": "^1.0.0",
     "run-parallel": "^1.2.0",
     "run-waterfall": "^1.1.7"
   },
   "devDependencies": {
-    "@architect/eslint-config": "2.0.0",
+    "@architect/eslint-config": "^1.0.1",
     "@architect/sandbox": "^4.0.4",
     "eslint": "^7.31.0",
     "tap-spec": "^5.0.0",
     "tape": "^5.2.2",
     "tiny-json-http": "^7.3.0"
+  },
+  "eslintConfig": {
+    "extends": "@architect/eslint-config"
   },
   "keywords": [
     "serverless",
@@ -38,8 +44,5 @@
     "keyvalue",
     "infrastructure",
     "infra"
-  ],
-  "eslintConfig": {
-    "extends": "@architect/eslint-config"
-  }
+  ]
 }
