@@ -30,6 +30,23 @@ test('factory style', async t => {
   console.log(tuxedo, yoda)
 })
 
+test('page', async t => {
+  t.plan(1)
+  let cats = factory('cats')
+  let pages = await cats.page({ limit: 1 })
+  let count = 0
+  for await (let c of pages)
+    count += c.length
+  t.ok(count === 2, 'found two cats')
+})
+
+test('count', async t => {
+  t.plan(1)
+  let cats = factory('cats')
+  let len = await cats.count()
+  t.ok(len === 2, 'found two cats')
+})
+
 test('end sandbox', async t => {
   t.plan(1)
   await sandbox.end()

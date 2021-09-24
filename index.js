@@ -14,7 +14,10 @@ let Table = require('./src/table')
  *
  *  let [cats, dogs] = factory('cats', 'dogs')
  */
-let factory = (...args) => args.map(name => new Table(name))
+function factory (...args) {
+  let result = args.map(name => new Table(name))
+  return result.length === 1 ? result[0] : result
+}
 
 module.exports = {
   get,
