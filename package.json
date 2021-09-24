@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --fix .",
-    "test": "npm run lint && tape test/*-test.js | tap-spec",
+    "test": "npm run lint && tape test/factory-test.js | tap-spec",
+    "_test": "npm run lint && tape test/*-test.js | tap-spec",
     "rc": "npm version prerelease --preid RC"
   },
   "license": "Apache-2.0",
