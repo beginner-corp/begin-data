@@ -4,8 +4,6 @@ let tablename = false
 
 module.exports = function getTableName (callback) {
   let override = process.env.BEGIN_DATA_TABLE_NAME
-  // ARC_CLOUDFORMATION is present in live AWS deploys with Architect 6+
-  let arc6 = process.env.ARC_CLOUDFORMATION || process.env.ARC_HTTP === 'aws_proxy'
 
   if (override) {
     callback(null, process.env.BEGIN_DATA_TABLE_NAME)
@@ -14,7 +12,7 @@ module.exports = function getTableName (callback) {
   else if (tablename) {
     callback(null, tablename)
   }
-  else if (arc6) {
+  else  {
     let isLocal = process.env.NODE_ENV === 'testing'
     let config
     if (isLocal) {
@@ -45,8 +43,5 @@ module.exports = function getTableName (callback) {
         }
       }
     })
-  }
-  else {
-    throw ReferenceError('begin/data could not find the data table')
   }
 }
