@@ -27,10 +27,10 @@
   },
   "devDependencies": {
     "@architect/eslint-config": "^1.0.1",
-    "@architect/sandbox": "^4.0.4",
-    "eslint": "^7.31.0",
+    "@architect/sandbox": "^4.2.1",
+    "eslint": "^8.0.1",
     "tap-spec": "^5.0.0",
-    "tape": "^5.2.2",
+    "tape": "^5.3.1",
     "tiny-json-http": "^7.3.0"
   },
   "eslintConfig": {
