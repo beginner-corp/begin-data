@@ -1,6 +1,23 @@
 # Begin Data changelog
 ---
 
+## [3.0.3] 2021-10-14
+
+### Fixed
+
+- Fixed issue where Begin Data may not work in unit tests with Sandbox >= 4.1
+
+---
+
+## [3.0.1 - 3.0.2] 2021-09-20
+
+### Changed
+
+- Enforce minimum of Node 12
+- Updated dependencies
+
+---
+
 ## [3.0.0] 2021-07-22
 
 ### Changed
