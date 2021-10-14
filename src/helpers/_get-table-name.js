@@ -5,7 +5,7 @@ let tablename = false
 module.exports = function getTableName (callback) {
   let override = process.env.BEGIN_DATA_TABLE_NAME
   // ARC_CLOUDFORMATION is present in live AWS deploys with Architect 6+
-  let arc6 = process.env.ARC_CLOUDFORMATION || process.env.ARC_HTTP === 'aws_proxy'
+  let arc6 = process.env.ARC_CLOUDFORMATION || process.env.ARC_HTTP === 'aws_proxy' || process.env.ARC_ENV
 
   if (override) {
     callback(null, process.env.BEGIN_DATA_TABLE_NAME)

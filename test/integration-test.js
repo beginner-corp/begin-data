@@ -20,7 +20,6 @@ test('start sandbox', async t => {
 
 test('get a key that does not exist returns null', async t => {
   t.plan(1)
-  console.log('port: ', process.env.PORT)
   let result = await data.get({ table: 'foo', key: 'nooo' })
   t.equal(result, null, 'non existent key returns null')
 })
@@ -41,7 +40,6 @@ test('set/get/count', async t => {
   t.ok(count === 1, 'item count of one')
   console.log('data.count ===', count)
 })
-
 
 test('destroy', async t => {
   t.plan(2)
