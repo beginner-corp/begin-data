@@ -2,17 +2,17 @@ let sandbox = require('@architect/sandbox')
 let data = require('../')
 let test = require('tape')
 
-test('start sandbox', async t=> {
+test('start sandbox', async t => {
   t.plan(1)
-  await sandbox.start()
-  t.ok(true, 'sandbox.start')
+  await sandbox.start({ cwd: __dirname })
+  t.pass('sandbox.start')
 })
 
-test('tables with similar namespacing', async t=> {
+test('tables with similar namespacing', async t => {
   t.plan(2)
   // write some data
-  const USER_TABLE = "tempuser"
-  const USERNAME_TABLE =  "tempusername"
+  const USER_TABLE = 'tempuser'
+  const USERNAME_TABLE =  'tempusername'
   const result = await data.set([
     { table: USER_TABLE },
     { table: USERNAME_TABLE }
@@ -25,10 +25,10 @@ test('tables with similar namespacing', async t=> {
   console.log(users)
 })
 
-test('shutdown sandbox', async t=> {
+test('shutdown sandbox', async t => {
   t.plan(1)
   await sandbox.end()
-  t.ok(true, 'sandbox.end')
+  t.pass('sandbox.end')
 })
 
 // ensure clean exit even on hanging async work

@@ -1,12 +1,51 @@
 # Begin Data changelog
-
 ---
 
-## [1.2.3] 2020-06-27
+## [3.0.3] 2021-10-14
 
 ### Fixed
 
+- Fixed issue where Begin Data may not work in unit tests with Sandbox >= 4.1
+
+---
+
+## [3.0.1 - 3.0.2] 2021-09-20
+
+### Changed
+
+- Enforce minimum of Node 12
+- Updated dependencies
+
+---
+
+## [3.0.0] 2021-07-22
+
+### Changed
+
+- Breaking change: Begin Data no longer supports Node.js 10 (now EOL, and no longer available to create / update in AWS Lambda)
+- Potentially breaking change: Begin Data now requires `@architect/sandbox` 4.0 or greater for local use
+- Removed Arc v5 deprecation warnings
+- Linted some stuff, tidied up project files
+- Updated dependencies
+
+
+### Fixed
+
+- Removed unnecessary dependency
+
+---
+
+## [2.0.0 - 2.0.1] 2021-03-18
+
+### Added
+
+- Added lookup for Begin Data table in Architect Sandbox via new internal service discovery endpoint
 - Fixed local file path issue for loading Architect project manifests that aren't `.arc` (e.g. `app.arc`, `arc.yaml`, etc.)
+
+
+### Fixed
+
+- Fixed missing dependency
 
 ---
 
