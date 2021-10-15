@@ -7,7 +7,7 @@ let https = require('https')
 function getDynamo (type, callback) {
   if (!type) throw ReferenceError('Must supply Dynamo service interface type')
 
-  let testing = process.env.ARC_ENV === 'testing' || process.env.NODE_ENV === 'testing'
+  let testing = process.env.ARC_ENV ? process.env.ARC_ENV === 'testing' : process.env.NODE_ENV === 'testing'
   let port = process.env.ARC_TABLES_PORT || 5000
   let local = {
     endpoint: new aws.Endpoint(`http://localhost:${port}`),
