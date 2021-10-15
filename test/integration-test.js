@@ -18,6 +18,44 @@ test('start sandbox', async t => {
   t.pass('started')
 })
 
+test('no NODE_ENV set', async t => {
+  t.plan(1)
+  let tmp_NODE_ENV
+  try {
+    tmp_NODE_ENV = process.env.NODE_ENV
+    delete process.env.NODE_ENV
+    let result = await data.set({ table: 'here', key: 'now' })
+    t.ok(result, 'No NODE_ENV doesnt blow up')
+  }
+  catch (e){
+    console.log(e)
+    t.fail('No NODE_ENV fails')
+  }
+  finally {
+    if (tmp_NODE_ENV) process.env.NODE_ENV = tmp_NODE_ENV
+  }
+})
+
+
+test('unexpected NODE_ENV set', async t => {
+  t.plan(1)
+  let tmp_NODE_ENV
+  try {
+    tmp_NODE_ENV = process.env.NODE_ENV
+    process.env.NODE_ENV = 'enexpected'
+    let result = await data.set({ table: 'here', key: 'now' })
+    t.ok(result, 'No NODE_ENV doesnt blow up')
+  }
+  catch (e){
+    console.log(e)
+    t.fail('No NODE_ENV fails')
+  }
+  finally {
+    if (tmp_NODE_ENV) process.env.NODE_ENV = tmp_NODE_ENV
+    else delete process.env.NODE_ENV
+  }
+})
+
 test('get a key that does not exist returns null', async t => {
   t.plan(1)
   let result = await data.get({ table: 'foo', key: 'nooo' })
