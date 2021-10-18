@@ -1,6 +1,14 @@
 # Begin Data changelog
 ---
 
+## [3.0.4] 2021-10-18
+
+### Fixed
+
+- Fixed issue so that if present ARC_ENV takes precedence over NODE_ENV for stage.
+
+---
+
 ## [3.0.3] 2021-10-14
 
 ### Fixed
