@@ -15,7 +15,7 @@ module.exports = function getTableName (callback) {
     callback(null, tablename)
   }
   else if (arc6) {
-    let isLocal = process.env.NODE_ENV === 'testing'
+    let isLocal = process.env.ARC_ENV ? process.env.ARC_ENV === 'testing' : process.env.NODE_ENV === 'testing'
     let config
     if (isLocal) {
       // If running in Sandbox, use its SSM service discovery mock

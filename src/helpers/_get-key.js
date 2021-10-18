@@ -11,8 +11,9 @@
  */
 module.exports = function getKey (params) {
   let { table, key } = params
-  let env = process.env.NODE_ENV === 'testing' ? 'staging' : (process.env.NODE_ENV || 'staging')
+  let env = process.env.ARC_ENV || process.env.NODE_ENV
+  let envKey = env === 'testing' ? 'staging' : (env || 'staging')
   let scopeID = process.env.BEGIN_DATA_SCOPE_ID || process.env.ARC_APP_NAME || 'sandbox'
-  let dataID = `${env}#${table}#${key}`
+  let dataID = `${envKey}#${table}#${key}`
   return { scopeID, dataID }
 }
