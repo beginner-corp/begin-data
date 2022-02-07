@@ -3,31 +3,31 @@ let http = require('http')
 let tablename = false
 
 module.exports = function getTableName (callback) {
-  let override = process.env.BEGIN_DATA_TABLE_NAME
-  // ARC_CLOUDFORMATION is present in live AWS deploys with Architect 6+
-  let arc6 = process.env.ARC_CLOUDFORMATION || process.env.ARC_HTTP === 'aws_proxy' || process.env.ARC_ENV
+  let { ARC_APP_NAME, ARC_ENV, ARC_SANDBOX, AWS_REGION, BEGIN_DATA_TABLE_NAME } = process.env
 
-  if (override) {
-    callback(null, process.env.BEGIN_DATA_TABLE_NAME)
+  if (BEGIN_DATA_TABLE_NAME) {
+    callback(null, BEGIN_DATA_TABLE_NAME)
   }
   // Use cached value
   else if (tablename) {
     callback(null, tablename)
   }
-  else if (arc6) {
-    let isLocal = process.env.ARC_ENV ? process.env.ARC_ENV === 'testing' : process.env.NODE_ENV === 'testing'
+  else {
+    let isLocal = ARC_ENV === 'testing'
     let config
     if (isLocal) {
       // If running in Sandbox, use its SSM service discovery mock
-      let port = process.env.ARC_INTERNAL || 3332
+      let { ports } = JSON.parse(ARC_SANDBOX)
+      let port = ports._arc
       config = {
         endpoint: new aws.Endpoint(`http://localhost:${port}/_arc/ssm`),
-        region: process.env.AWS_REGION || 'us-west-2',
+        region: AWS_REGION || 'us-west-2',
         httpOptions: { agent: new http.Agent() }
       }
     }
     let ssm = new aws.SSM(config)
-    let Path = `/${process.env.ARC_CLOUDFORMATION || 'sandbox'}`
+    let appName = toLogicalID(`${ARC_APP_NAME}-${ARC_ENV}`)
+    let Path = `/${appName}/tables`
     ssm.getParametersByPath({ Path, Recursive: true }, function done (err, result) {
       if (err) callback(err)
       else {
@@ -46,7 +46,18 @@ module.exports = function getTableName (callback) {
       }
     })
   }
-  else {
-    throw ReferenceError('begin/data could not find the data table')
+}
+
+function toLogicalID (str) {
+  str = str.replace(/([A-Z])/g, ' $1')
+  if (str.length === 1) {
+    return str.toUpperCase()
   }
+  str = str.replace(/^[\W_]+|[\W_]+$/g, '').toLowerCase()
+  str = str.charAt(0).toUpperCase() + str.slice(1)
+  str = str.replace(/[\W_]+(\w|$)/g, (_, ch) => ch.toUpperCase())
+  if (str === 'Get') {
+    return 'GetIndex'
+  }
+  return str
 }

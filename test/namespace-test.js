@@ -4,6 +4,8 @@ let test = require('tape')
 
 test('start sandbox', async t => {
   t.plan(1)
+  process.env.ARC_APP_NAME = 'test'
+  process.env.ARC_SANDBOX = JSON.stringify({ ports: { tables: 5555, _arc: 2222 } })
   await sandbox.start({ cwd: __dirname })
   t.pass('sandbox.start')
 })
@@ -28,6 +30,8 @@ test('tables with similar namespacing', async t => {
 test('shutdown sandbox', async t => {
   t.plan(1)
   await sandbox.end()
+  delete process.env.ARC_APP_NAME
+  delete process.env.ARC_SANDBOX
   t.pass('sandbox.end')
 })
 

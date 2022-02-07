@@ -6,18 +6,23 @@ let https = require('https')
  */
 function getDynamo (type, callback) {
   if (!type) throw ReferenceError('Must supply Dynamo service interface type')
+  let { ARC_ENV, ARC_SANDBOX, AWS_REGION } = process.env
 
-  let testing = process.env.ARC_ENV ? process.env.ARC_ENV === 'testing' : process.env.NODE_ENV === 'testing'
-  let port = process.env.ARC_TABLES_PORT || 5000
-  let local = {
-    endpoint: new aws.Endpoint(`http://localhost:${port}`),
-    region: process.env.AWS_REGION || 'us-west-2' // Do not assume region is set!
+  let testing = ARC_ENV === 'testing'
+  let local
+  if (testing) {
+    let { ports } = JSON.parse(ARC_SANDBOX)
+    let port = ports.tables
+    local = {
+      endpoint: new aws.Endpoint(`http://localhost:${port}`),
+      region: AWS_REGION || 'us-west-2' // Do not assume region is set!
+    }
   }
   let DB = aws.DynamoDB
   let Doc = aws.DynamoDB.DocumentClient
   let dynamo // Assigned below
 
-  function updateConfig () {
+  if (!testing) {
     let agent = new https.Agent({
       keepAlive: true,
       maxSockets: 50,
@@ -30,18 +35,12 @@ function getDynamo (type, callback) {
   }
 
   if (type === 'db') {
-    if (!testing) {
-      updateConfig()
-    }
     dynamo = testing
       ? new DB(local)
       : new DB
   }
 
   if (type === 'doc') {
-    if (!testing) {
-      updateConfig()
-    }
     dynamo = testing
       ? new Doc(local)
       : new Doc
