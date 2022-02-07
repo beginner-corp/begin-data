@@ -1,11 +1,21 @@
 # Begin Data changelog
+
+---
+
+## [4.0.0] 2022-02-07
+
+### Changed
+
+- Breaking change: Begin Data no longer relies on or makes direct use of `NODE_ENV` or other legacy Architect env vars. `@begin/data` v4+ now requires Architect v10 / Sandbox v5 or later.
+- Improved table lookup performance
+
 ---
 
 ## [3.0.4] 2021-10-18
 
 ### Fixed
 
-- Fixed issue so that if present ARC_ENV takes precedence over NODE_ENV for stage.
+- Fixed issue so that if present `ARC_ENV` takes precedence over `NODE_ENV` for stage.
 
 ---
 

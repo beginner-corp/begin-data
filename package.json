@@ -26,12 +26,12 @@
     "run-waterfall": "^1.1.7"
   },
   "devDependencies": {
-    "@architect/eslint-config": "^1.0.1",
-    "@architect/sandbox": "^4.2.1",
-    "eslint": "^8.0.1",
+    "@architect/eslint-config": "^2.0.1",
+    "@architect/sandbox": "^5.0.0-RC.9",
+    "eslint": "^8.8.0",
     "tap-spec": "^5.0.0",
-    "tape": "^5.3.1",
-    "tiny-json-http": "^7.3.0"
+    "tape": "^5.5.0",
+    "tiny-json-http": "^7.3.1"
   },
   "eslintConfig": {
     "extends": "@architect/eslint-config"
