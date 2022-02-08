@@ -27,7 +27,7 @@ module.exports = function getTableName (callback) {
     }
     let ssm = new aws.SSM(config)
     let appName = toLogicalID(`${ARC_APP_NAME}-${ARC_ENV}`)
-    let Path = `/${appName}/tables`
+    let Path = `/${appName}`
     ssm.getParametersByPath({ Path, Recursive: true }, function done (err, result) {
       if (err) callback(err)
       else {
