@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@architect/eslint-config": "^1.0.1",
-    "@architect/sandbox": "^4.2.1",
+    "@architect/sandbox": "^5.0.2",
     "eslint": "^8.0.1",
     "tap-spec": "^5.0.0",
     "tape": "^5.3.1",
