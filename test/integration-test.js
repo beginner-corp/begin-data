@@ -14,8 +14,6 @@ test('env', t => {
 
 test('Start sandbox', async t => {
   t.plan(1)
-  process.env.ARC_APP_NAME = 'test'
-  process.env.ARC_SANDBOX = JSON.stringify({ ports: { tables: 5555, _arc: 2222 } })
   await sandbox.start({ cwd: __dirname })
   t.pass('started')
 })
@@ -54,7 +52,6 @@ test('destroy', async t => {
   t.ok(count === 0, 'item destroyed')
 })
 
-
 test('batch set (across multiple tables)', async t => {
   t.plan(2)
 
@@ -71,7 +68,6 @@ test('batch set (across multiple tables)', async t => {
   t.ok(ppl === 2, 'two ppl saved')
   t.ok(tacos === 3, 'three tacos saved')
 })
-
 
 test('limit batch to 25 items', async t => {
   t.plan(1)
@@ -101,7 +97,6 @@ test('batch destroy', async t => {
   t.ok(tacos === 1, 'one taco left!')
 })
 
-
 test('batch get', async t => {
   t.plan(1)
 
@@ -117,7 +112,6 @@ test('batch get', async t => {
   t.ok(result.length === 3, 'read mountains')
   console.log(result)
 })
-
 
 test('incr/decr', async t => {
   t.plan(10)
@@ -141,8 +135,7 @@ test('incr/decr', async t => {
   t.ok(decrRes.dataID === undefined, 'decrRes.dataID is undefined')
 })
 
-
-test('node8.10 cursor style pagination', async t => {
+test('Node 8+ cursor style pagination', async t => {
   t.plan(4)
 
   // add 100 ppl (25 at a time)
@@ -262,8 +255,6 @@ test('paginate ten at a time', async t => {
 test('shutdown sandbox', async t => {
   t.plan(1)
   await sandbox.end()
-  delete process.env.ARC_APP_NAME
-  delete process.env.ARC_SANDBOX
   t.pass('done')
 })
 

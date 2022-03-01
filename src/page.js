@@ -9,15 +9,14 @@ let get = require('./get')
  * @returns {asyncIterable}
  */
 module.exports = function page (props) {
-
-  if (!props.table)
+  if (!props.table) {
     throw ReferenceError('Missing params.table')
+  }
 
   let cursor = false
   let finished = false
 
   function next () {
-
     // signal completion
     if (finished) {
       return {

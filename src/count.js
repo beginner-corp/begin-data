@@ -13,8 +13,10 @@ let dynamo = require('./helpers/_dynamo').doc
  * @returns {promise} promise - if no callback is supplied a promise is returned
  */
 module.exports = function count ({ table }, callback) {
-  if (!table)
+  if (!table) {
     throw ReferenceError('Missing params.table')
+  }
+
   let promise
   if (!callback) {
     promise = new Promise(function (res, rej) {
@@ -23,6 +25,7 @@ module.exports = function count ({ table }, callback) {
       }
     })
   }
+
   let { scopeID, dataID } = getKey({ table, key: 'UNKNOWN' })
   waterfall([
     getTableName,
@@ -50,9 +53,8 @@ module.exports = function count ({ table }, callback) {
   ],
   function counted (err, result) {
     if (err) callback(err)
-    else {
-      callback(null, result.ScannedCount)
-    }
+    else callback(null, result.ScannedCount)
   })
+
   return promise
 }

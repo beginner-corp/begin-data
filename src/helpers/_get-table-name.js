@@ -1,63 +1,57 @@
-let aws = require('aws-sdk')
-let http = require('http')
+let toLogicalID = require('./_to-logical-id')
+let getPorts = require('./_get-ports')
 let tablename = false
 
 module.exports = function getTableName (callback) {
-  let { ARC_APP_NAME, ARC_ENV, ARC_SANDBOX, AWS_REGION, BEGIN_DATA_TABLE_NAME } = process.env
+  let { ARC_APP_NAME: app, ARC_ENV, AWS_REGION, BEGIN_DATA_TABLE_NAME } = process.env
 
   if (BEGIN_DATA_TABLE_NAME) {
-    callback(null, BEGIN_DATA_TABLE_NAME)
+    return callback(null, BEGIN_DATA_TABLE_NAME)
   }
+
   // Use cached value
-  else if (tablename) {
-    callback(null, tablename)
+  if (tablename) {
+    return callback(null, tablename)
   }
-  else {
-    let isLocal = ARC_ENV === 'testing'
-    let config
-    if (isLocal) {
-      // If running in Sandbox, use its SSM service discovery mock
-      let { ports } = JSON.parse(ARC_SANDBOX)
-      let port = ports._arc
-      config = {
-        endpoint: new aws.Endpoint(`http://localhost:${port}/_arc/ssm`),
+
+  // We really only want to load aws-sdk if absolutely necessary, and only the client we need
+  // eslint-disable-next-line
+  let SSM = require('aws-sdk/clients/ssm')
+
+  let local = ARC_ENV === 'testing'
+  if (!local && !app) {
+    return callback(ReferenceError('ARC_APP_NAME env var not found'))
+  }
+  if (local && !app) {
+    app = 'arc-app'
+  }
+  let Name = `/${toLogicalID(`${app}-${ARC_ENV}`)}/tables/data`
+
+  if (local) {
+    getPorts((err, ports) => {
+      if (err) callback(err)
+      else go({
+        endpoint: `http://localhost:${ports._arc}/_arc/ssm`,
         region: AWS_REGION || 'us-west-2',
-        httpOptions: { agent: new http.Agent() }
-      }
-    }
-    let ssm = new aws.SSM(config)
-    let appName = toLogicalID(`${ARC_APP_NAME}-${ARC_ENV}`)
-    let Path = `/${appName}`
-    ssm.getParametersByPath({ Path, Recursive: true }, function done (err, result) {
+      })
+    })
+  }
+  else go()
+
+  function go (config) {
+    let ssm = new SSM(config)
+    ssm.getParameter({ Name }, function done (err, result) {
       if (err) callback(err)
       else {
-        let table = param => param.Name.split('/')[2] === 'tables'
-        let tables = result.Parameters.filter(table).reduce((a, b) => {
-          a[b.Name.split('/')[3]] = b.Value
-          return a
-        }, {})
-        if (!tables.data) {
-          callback(ReferenceError('begin/data requires a table named data'))
+        let table = result.Parameter
+        if (!table) {
+          callback(ReferenceError('@begin/data requires a table named data'))
         }
         else {
-          tablename = tables.data
+          tablename = table.Value
           callback(null, tablename)
         }
       }
     })
   }
-}
-
-function toLogicalID (str) {
-  str = str.replace(/([A-Z])/g, ' $1')
-  if (str.length === 1) {
-    return str.toUpperCase()
-  }
-  str = str.replace(/^[\W_]+|[\W_]+$/g, '').toLowerCase()
-  str = str.charAt(0).toUpperCase() + str.slice(1)
-  str = str.replace(/[\W_]+(\w|$)/g, (_, ch) => ch.toUpperCase())
-  if (str === 'Get') {
-    return 'GetIndex'
-  }
-  return str
 }

@@ -1,7 +1,6 @@
 let test = require('tape')
 let file = '../src/helpers/_dynamo'
 let dynamo
-let env = process.env.ARC_ENV
 
 function reset (t) {
   delete process.env.AWS_REGION
@@ -15,9 +14,7 @@ function reset (t) {
 
 test('Set up env', t => {
   t.plan(2)
-  process.env.ARC_APP_NAME = 'test'
   process.env.ARC_ENV = 'testing'
-  process.env.ARC_SANDBOX = JSON.stringify({ ports: { tables: 5555, _arc: 2222 } })
 
   // eslint-disable-next-line
   dynamo = require(file)
@@ -155,9 +152,7 @@ test('Live AWS infra config', t => {
 
 test('Tear down env', t => {
   t.plan(1)
-  process.env.ARC_ENV = env
-  delete process.env.ARC_APP_NAME
-  delete process.env.ARC_SANDBOX
+  delete process.env.ARC_ENV
   reset(t)
   t.pass('Tore down env')
 })
