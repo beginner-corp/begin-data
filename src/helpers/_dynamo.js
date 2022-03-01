@@ -1,52 +1,71 @@
-let aws = require('aws-sdk')
 let https = require('https')
+let getPorts = require('./_get-ports')
+let db, doc
 
 /**
  * Instantiates Dynamo service interfaces
  */
 function getDynamo (type, callback) {
   if (!type) throw ReferenceError('Must supply Dynamo service interface type')
-  let { ARC_ENV, ARC_SANDBOX, AWS_REGION } = process.env
 
-  let testing = ARC_ENV === 'testing'
-  let local
-  if (testing) {
-    let { ports } = JSON.parse(ARC_SANDBOX)
-    let port = ports.tables
-    local = {
-      endpoint: new aws.Endpoint(`http://localhost:${port}`),
-      region: AWS_REGION || 'us-west-2' // Do not assume region is set!
-    }
+  // We really only want to load aws-sdk if absolutely necessary
+  // eslint-disable-next-line
+  let dynamo = require('aws-sdk/clients/dynamodb')
+
+  let { ARC_ENV, AWS_REGION } = process.env
+  let local = ARC_ENV === 'testing'
+  let DB = dynamo
+  let Doc = dynamo.DocumentClient
+
+  if (db && type === 'db') {
+    return callback(null, db)
   }
-  let DB = aws.DynamoDB
-  let Doc = aws.DynamoDB.DocumentClient
-  let dynamo // Assigned below
+  if (doc && type === 'doc') {
+    return callback(null, doc)
+  }
 
-  if (!testing) {
+  if (!local) {
     let agent = new https.Agent({
       keepAlive: true,
-      maxSockets: 50,
+      maxSockets: 50, // Node can set to Infinity; AWS maxes at 50; check back on this every once in a while
       rejectUnauthorized: true,
     })
-    aws.config.update({
-      httpOptions: { agent }
-    })
     // TODO? migrate to using `AWS_NODEJS_CONNECTION_REUSE_ENABLED`?
+    let config = {
+      httpOptions: { agent }
+    }
+    if (type === 'db') {
+      db = new DB(config)
+      return callback(null, db)
+    }
+    if (type === 'doc') {
+      doc = new Doc(config)
+      return callback(null, doc)
+    }
   }
-
-  if (type === 'db') {
-    dynamo = testing
-      ? new DB(local)
-      : new DB
+  else {
+    getPorts((err, ports) => {
+      if (err) callback(err)
+      else {
+        let port = ports.tables
+        if (!port) {
+          return callback(ReferenceError('Sandbox tables port not found'))
+        }
+        let config = {
+          endpoint: `http://localhost:${port}`,
+          region: AWS_REGION || 'us-west-2' // Do not assume region is set!
+        }
+        if (type === 'db') {
+          db = new DB(config)
+          return callback(null, db)
+        }
+        if (type === 'doc') {
+          doc = new Doc(config)
+          return callback(null, doc)
+        }
+      }
+    })
   }
-
-  if (type === 'doc') {
-    dynamo = testing
-      ? new Doc(local)
-      : new Doc
-  }
-
-  callback(null, dynamo)
 }
 
 module.exports = {

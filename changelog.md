@@ -4,8 +4,15 @@
 
 ## [4.0.0] 2022-02-07
 
+### Added
+
+- Added support for Sandbox dynamic port selection
+  - Added best-effort attempt to find Sandbox ports via internal SSM
+
+
 ### Changed
 
+- Deep require `aws-sdk` deps for a potentially large cold start perf boost
 - Breaking change: Begin Data no longer relies on or makes direct use of `NODE_ENV` or other legacy Architect env vars. `@begin/data` v4+ now requires Architect v10 / Sandbox v5 or later.
 - Improved table lookup performance
 
