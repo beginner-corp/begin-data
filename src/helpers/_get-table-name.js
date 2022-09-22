@@ -3,7 +3,7 @@ let getPorts = require('./_get-ports')
 let tablename = false
 
 module.exports = function getTableName (callback) {
-  let { ARC_APP_NAME: app, ARC_ENV, AWS_REGION, BEGIN_DATA_TABLE_NAME } = process.env
+  let { ARC_APP_NAME: app, ARC_ENV, ARC_STACK_NAME, AWS_REGION, BEGIN_DATA_TABLE_NAME } = process.env
 
   if (BEGIN_DATA_TABLE_NAME) {
     return callback(null, BEGIN_DATA_TABLE_NAME)
@@ -25,7 +25,8 @@ module.exports = function getTableName (callback) {
   if (local && !app) {
     app = 'arc-app'
   }
-  let Name = `/${toLogicalID(`${app}-${ARC_ENV}`)}/tables/data`
+  let stack = ARC_STACK_NAME || toLogicalID(`${app}-${ARC_ENV}`)
+  let Name = `/${stack}/tables/data`
 
   if (local) {
     getPorts((err, ports) => {
