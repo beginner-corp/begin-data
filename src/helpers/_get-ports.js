@@ -1,3 +1,4 @@
+let isNode18 = require('./_is-node-18')
 let toLogicalID = require('./_to-logical-id')
 let configuredPorts
 
@@ -19,9 +20,6 @@ module.exports = function getPorts (callback) {
   }
   // Fall back to an internal SSM query in case Data is running as a bare module
   else {
-    // We really only want to load aws-sdk if absolutely necessary, and only the client we need
-    // eslint-disable-next-line
-    let SSM = require('aws-sdk/clients/ssm')
     let local = env === 'testing'
     if (!local && !app) {
       return callback(ReferenceError('ARC_APP_NAME env var not found'))
@@ -35,6 +33,8 @@ module.exports = function getPorts (callback) {
       endpoint: `http://localhost:${port}/_arc/ssm`,
       region: AWS_REGION || 'us-west-2',
     }
+
+    let SSM = isNode18 ? require('@aws-sdk/client-ssm').SSM : require('aws-sdk/clients/ssm')
     let ssm = new SSM(config)
     ssm.getParameter({ Name }, function done (err, result) {
       if (err) callback(err)
