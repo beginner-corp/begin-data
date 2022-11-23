@@ -1,3 +1,4 @@
+let isNode18 = require('./_is-node-18')
 let toLogicalID = require('./_to-logical-id')
 let getPorts = require('./_get-ports')
 let tablename = false
@@ -13,10 +14,6 @@ module.exports = function getTableName (callback) {
   if (tablename) {
     return callback(null, tablename)
   }
-
-  // We really only want to load aws-sdk if absolutely necessary, and only the client we need
-  // eslint-disable-next-line
-  let SSM = require('aws-sdk/clients/ssm')
 
   let local = ARC_ENV === 'testing'
   if (!local && !app) {
@@ -40,6 +37,8 @@ module.exports = function getTableName (callback) {
   else go()
 
   function go (config) {
+
+    let SSM = isNode18 ? require('@aws-sdk/client-ssm').SSM : require('aws-sdk/clients/ssm')
     let ssm = new SSM(config)
     ssm.getParameter({ Name }, function done (err, result) {
       if (err) callback(err)

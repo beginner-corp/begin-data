@@ -1,47 +1,48 @@
 let https = require('https')
 let getPorts = require('./_get-ports')
+let isNode18 = require('./_is-node-18')
 let db, doc
 
 /**
  * Instantiates Dynamo service interfaces
  */
 function getDynamo (type, callback) {
-  if (!type) throw ReferenceError('Must supply Dynamo service interface type')
 
-  // We really only want to load aws-sdk if absolutely necessary
-  // eslint-disable-next-line
-  let dynamo = require('aws-sdk/clients/dynamodb')
-
-  let { ARC_ENV, AWS_REGION } = process.env
-  let local = ARC_ENV === 'testing'
-  let DB = dynamo
-  let Doc = dynamo.DocumentClient
+  let { ARC_ENV, AWS_REGION, ARC_LOCAL } = process.env
 
   if (db && type === 'db') {
     return callback(null, db)
   }
+
   if (doc && type === 'doc') {
     return callback(null, doc)
   }
 
+  let DB, Doc
+  if (isNode18) {
+    let dynamo = require('@aws-sdk/client-dynamodb')
+    let docclient = require('@aws-sdk/lib-dynamodb')
+    DB = dynamo.DynamoDB
+    Doc = docclient.DynamoDBDocument
+  }
+  else {
+    let dynamo = require('aws-sdk/clients/dynamodb')
+    DB = dynamo
+    Doc = dynamo.DocumentClient
+  }
+
+  let local = ARC_ENV === 'testing' || ARC_LOCAL
   if (!local) {
-    let agent = new https.Agent({
-      keepAlive: true,
-      maxSockets: 50, // Node can set to Infinity; AWS maxes at 50; check back on this every once in a while
-      rejectUnauthorized: true,
-    })
-    // TODO? migrate to using `AWS_NODEJS_CONNECTION_REUSE_ENABLED`?
     let config = {
-      httpOptions: { agent }
+      agent: new https.Agent({
+        keepAlive: true,
+        maxSockets: 50, // Node can set to Infinity; AWS maxes at 50
+        rejectUnauthorized: true,
+      })
     }
-    if (type === 'db') {
-      db = new DB(config)
-      return callback(null, db)
-    }
-    if (type === 'doc') {
-      doc = new Doc(config)
-      return callback(null, doc)
-    }
+    db = isNode18 ? new DB : new DB(config)
+    doc = isNode18 ? Doc.from(db) : new Doc(config)
+    return callback(null, type === 'db' ? db : doc)
   }
   else {
     getPorts((err, ports) => {
@@ -55,14 +56,9 @@ function getDynamo (type, callback) {
           endpoint: `http://localhost:${port}`,
           region: AWS_REGION || 'us-west-2' // Do not assume region is set!
         }
-        if (type === 'db') {
-          db = new DB(config)
-          return callback(null, db)
-        }
-        if (type === 'doc') {
-          doc = new Doc(config)
-          return callback(null, doc)
-        }
+        db = new DB(config)
+        doc = isNode18 ? Doc.from(db) : new Doc(config)
+        return callback(null, type === 'db' ? db : doc)
       }
     })
   }
