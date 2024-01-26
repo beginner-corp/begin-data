@@ -1,5 +1,7 @@
-let isNode18 = require('./_is-node-18')
 let toLogicalID = require('./_to-logical-id')
+let util = require('util')
+let awsLite = require('@aws-lite/client')
+let aws = util.callbackify(awsLite)
 let configuredPorts
 
 module.exports = function getPorts (callback) {
@@ -28,29 +30,36 @@ module.exports = function getPorts (callback) {
       app = 'arc-app'
     }
     let Name = `/${toLogicalID(`${app}-${env}`)}/ARC_SANDBOX/ports`
-    let port = 2222
     let config = {
-      endpoint: `http://localhost:${port}/_arc/ssm`,
+      protocol: 'http',
+      host: 'localhost',
+      port: 2222,
+      endpointPrefix: '_arc/ssm',
+      // endpoint: `http://localhost:${port}/_arc/ssm`,
       region: AWS_REGION || 'us-west-2',
     }
 
-    let SSM = isNode18 ? require('@aws-sdk/client-ssm').SSM : require('aws-sdk/clients/ssm')
-    let ssm = new SSM(config)
-    ssm.getParameter({ Name }, function done (err, result) {
+    aws(config, function gotClient (err, { ssm }) {
       if (err) callback(err)
       else {
-        if (!result.Parameter.Value) {
-          callback(ReferenceError('@begin/data requires Sandbox to be running'))
-        }
-        else {
-          try {
-            configuredPorts = JSON.parse(result.Parameter.Value)
-            callback(null, configuredPorts)
+        let getParameter = util.callbackify(ssm.GetParameter)
+        getParameter({ Name }, function done (err, result) {
+          if (err) callback(err)
+          else {
+            if (!result.Parameter.Value) {
+              callback(ReferenceError('@begin/data requires Sandbox to be running'))
+            }
+            else {
+              try {
+                configuredPorts = JSON.parse(result.Parameter.Value)
+                callback(null, configuredPorts)
+              }
+              catch (err) {
+                callback(err)
+              }
+            }
           }
-          catch (err) {
-            callback(err)
-          }
-        }
+        })
       }
     })
   }

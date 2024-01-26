@@ -1,70 +1,50 @@
-let https = require('https')
 let getPorts = require('./_get-ports')
-let isNode18 = require('./_is-node-18')
-let db, doc
+let util = require('util')
+let awsLite = require('@aws-lite/client')
+let aws = util.callbackify(awsLite)
+let db = false
 
 /**
  * Instantiates Dynamo service interfaces
  */
-function getDynamo (type, callback) {
+module.exports = function getDynamo (callback) {
 
   let { ARC_ENV, AWS_REGION, ARC_LOCAL } = process.env
 
-  if (db && type === 'db') {
-    return callback(null, db)
-  }
-
-  if (doc && type === 'doc') {
-    return callback(null, doc)
-  }
-
-  let DB, Doc
-  if (isNode18) {
-    let dynamo = require('@aws-sdk/client-dynamodb')
-    let docclient = require('@aws-sdk/lib-dynamodb')
-    DB = dynamo.DynamoDB
-    Doc = docclient.DynamoDBDocument
-  }
-  else {
-    let dynamo = require('aws-sdk/clients/dynamodb')
-    DB = dynamo
-    Doc = dynamo.DocumentClient
-  }
+  if (db) return callback(null, db)
 
   let local = ARC_ENV === 'testing' || ARC_LOCAL
   if (!local) {
-    let config = {
-      agent: new https.Agent({
-        keepAlive: true,
-        maxSockets: 50, // Node can set to Infinity; AWS maxes at 50
-        rejectUnauthorized: true,
-      })
-    }
-    db = isNode18 ? new DB : new DB(config)
-    doc = isNode18 ? Doc.from(db) : new Doc(config)
-    return callback(null, type === 'db' ? db : doc)
+    aws(function gotClient (err, { ddb }) {
+      if (err) callback(err)
+      else {
+        db = ddb
+        callback(null, db)
+      }
+    })
   }
   else {
-    getPorts((err, ports) => {
+    getPorts(function gotPorts (err, ports) {
       if (err) callback(err)
       else {
         let port = ports.tables
         if (!port) {
           return callback(ReferenceError('Sandbox tables port not found'))
         }
-        let config = {
-          endpoint: `http://localhost:${port}`,
-          region: AWS_REGION || 'us-west-2' // Do not assume region is set!
-        }
-        db = new DB(config)
-        doc = isNode18 ? Doc.from(db) : new Doc(config)
-        return callback(null, type === 'db' ? db : doc)
+        aws({
+          protocol: 'http',
+          host: 'localhost',
+          port,
+          region: AWS_REGION || 'us-west-2'
+        },
+        function gotClient (err, { dynamodb }) {
+          if (err) callback(err)
+          else {
+            db = dynamodb
+            callback(null, db)
+          }
+        })
       }
     })
   }
-}
-
-module.exports = {
-  db: getDynamo.bind({}, 'db'),
-  doc: getDynamo.bind({}, 'doc'),
 }

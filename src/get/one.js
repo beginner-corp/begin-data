@@ -6,7 +6,8 @@ let waterfall = require('run-waterfall')
 let getTableName = require('../helpers/_get-table-name')
 let getKey = require('../helpers/_get-key')
 let unfmt = require('../helpers/_unfmt')
-let dynamo = require('../helpers/_dynamo').doc
+let dynamo = require('../helpers/_dynamo')
+let util = require('util')
 
 /**
  * Read a document
@@ -32,8 +33,9 @@ module.exports = function one (params, callback) {
       })
     },
     function gets (TableName, doc, callback) {
+      let getItem = util.callbackify(doc.GetItem)
       let Key = getKey(params)
-      doc.get({
+      getItem({
         TableName,
         Key
       }, callback)

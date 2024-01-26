@@ -2,9 +2,10 @@
  * @module count
  */
 let waterfall = require('run-waterfall')
+let util = require('util')
 let getTableName = require('./helpers/_get-table-name')
 let getKey = require('./helpers/_get-key')
-let dynamo = require('./helpers/_dynamo').doc
+let dynamo = require('./helpers/_dynamo')
 
 /**
  * Get document count for given table
@@ -36,7 +37,8 @@ module.exports = function count ({ table }, callback) {
       })
     },
     function counts (TableName, doc, callback) {
-      doc.query({
+      let query = util.callbackify(doc.Query)
+      query({
         TableName,
         Select: 'COUNT',
         KeyConditionExpression: '#scopeID = :scopeID and begins_with(#dataID, :dataID)',
