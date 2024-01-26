@@ -4,9 +4,10 @@ let test = require('tape')
 
 test('start sandbox', async t => {
   t.plan(1)
-  await sandbox.start({ cwd: __dirname })
+  await sandbox.start({ quiet: true, cwd: __dirname })
   t.pass('sandbox.start')
 })
+
 
 test('tables with similar namespacing', async t => {
   t.plan(2)

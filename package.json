@@ -4,8 +4,8 @@
   "description": "Begin Data is a durable and fast key/value document store built on top of DynamoDB",
   "main": "src/index.js",
   "scripts": {
+    "t": "tape test/integration-test.js | tap-spec",
     "lint": "eslint --fix .",
-    "t": "tape test/one.js | tap-spec",
     "test": "npm run lint && tape test/*-test.js | tap-spec",
     "rc": "npm version prerelease --preid RC"
   },

@@ -4,8 +4,9 @@
  */
 let waterfall = require('run-waterfall')
 let getTableName = require('./_get-table-name')
-let dynamo = require('./_dynamo').db
+let dynamo = require('./_dynamo')
 let Hashids = require('@begin/hashid')
+let util = require('util')
 let hash = new Hashids
 
 module.exports = function createKey (table, callback) {
@@ -19,27 +20,27 @@ module.exports = function createKey (table, callback) {
       })
     },
     function update (TableName, db, callback) {
-      db.updateItem({
+      let updateItem = util.callbackify(db.UpdateItem)
+      let query = {
         TableName,
         Key: {
-          'scopeID': { S: BEGIN_DATA_SCOPE_ID || ARC_APP_NAME },
-          'dataID': { S: `${table}-seq` }
+          'scopeID': BEGIN_DATA_SCOPE_ID || ARC_APP_NAME,
+          'dataID': `${table}-seq`
         },
-        AttributeUpdates: {
-          idx: {
-            Action: 'ADD',
-            Value: { N: '1' }
-          }
+        UpdateExpression: `SET idx = if_not_exists(idx, :one) + :one`,
+        ExpressionAttributeValues: {
+          ':one': 1
         },
-        ReturnValues: 'UPDATED_NEW'
-      }, callback)
+        ReturnValues: 'ALL_NEW'
+      }
+      updateItem(query, callback)
     }
   ],
   function done (err, result) {
     if (err) callback(err)
     else {
       let epoc = Date.now() - 1544909702376 // hbd
-      let seed = Number(result.Attributes.idx.N)
+      let seed = Number(result.Attributes.idx)
       let val = hash.encode([ epoc, seed ])
       callback(null, val)
     }
