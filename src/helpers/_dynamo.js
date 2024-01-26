@@ -32,6 +32,7 @@ module.exports = function getDynamo (callback) {
           return callback(ReferenceError('Sandbox tables port not found'))
         }
         aws({
+          debug: true,
           protocol: 'http',
           host: 'localhost',
           port,
