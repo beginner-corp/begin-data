@@ -1,4 +1,6 @@
-let isNode18 = require('./_is-node-18')
+let util = require('util')
+let awsLite = require('@aws-lite/client')
+let aws = util.callbackify(awsLite)
 let toLogicalID = require('./_to-logical-id')
 let getPorts = require('./_get-ports')
 let tablename = false
@@ -29,28 +31,39 @@ module.exports = function getTableName (callback) {
     getPorts((err, ports) => {
       if (err) callback(err)
       else go({
-        endpoint: `http://localhost:${ports._arc}/_arc/ssm`,
+        protocol: 'http',
+        host: 'localhost',
+        port: ports._arc,
+        endpointPrefix: '_arc/ssm',
+        // endpoint: `http://localhost:${ports._arc}/_arc/ssm`,
         region: AWS_REGION || 'us-west-2',
       })
     })
   }
-  else go()
+  else {
+    go()
+  }
 
   function go (config) {
-
-    let SSM = isNode18 ? require('@aws-sdk/client-ssm').SSM : require('aws-sdk/clients/ssm')
-    let ssm = new SSM(config)
-    ssm.getParameter({ Name }, function done (err, result) {
+    aws(config, function gotClient (err, { ssm }) {
       if (err) callback(err)
       else {
-        let table = result.Parameter
-        if (!table) {
-          callback(ReferenceError('@begin/data requires a table named data'))
-        }
-        else {
-          tablename = table.Value
-          callback(null, tablename)
-        }
+        let getParameter = util.callbackify(ssm.GetParameter)
+        getParameter({ Name }, function done (err, result) {
+          // let ssm = new SSM(config)
+          // ssm.getParameter({ Name }, function done (err, result) {
+          if (err) callback(err)
+          else {
+            let table = result.Parameter
+            if (!table) {
+              callback(ReferenceError('@begin/data requires a table named data'))
+            }
+            else {
+              tablename = table.Value
+              callback(null, tablename)
+            }
+          }
+        })
       }
     })
   }

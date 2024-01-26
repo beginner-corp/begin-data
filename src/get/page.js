@@ -6,7 +6,8 @@ let waterfall = require('run-waterfall')
 let getTableName = require('../helpers/_get-table-name')
 let getKey = require('../helpers/_get-key')
 let unfmt = require('../helpers/_unfmt')
-let dynamo = require('../helpers/_dynamo').doc
+let dynamo = require('../helpers/_dynamo')
+let util = require('util')
 
 /**
  * Read documents
@@ -55,7 +56,8 @@ module.exports = function page (params, callback) {
       if (params.cursor) {
         query.ExclusiveStartKey = JSON.parse(Buffer.from(params.cursor, 'base64').toString('utf8'))
       }
-      doc.query(query, callback)
+      let runQuery = util.callbackify(doc.Query)
+      runQuery(query, callback)
     },
   ],
   function paged (err, result) {

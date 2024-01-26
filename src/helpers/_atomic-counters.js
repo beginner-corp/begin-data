@@ -4,7 +4,8 @@
  * @module decr
  */
 let waterfall = require('run-waterfall')
-let dynamo = require('./_dynamo').doc
+let util = require('util')
+let dynamo = require('./_dynamo')
 let getTableName = require('./_get-table-name')
 let getKey = require('./_get-key')
 let unfmt = require('./_unfmt')
@@ -41,9 +42,10 @@ function atomic (isIncr, params, callback) {
         else callback(null, TableName, doc)
       })
     },
-    function update (TableName, doc, callback) {
+    function _update (TableName, doc, callback) {
       // perform the atomic update and callback w the updated values
-      doc.update({
+      let update = util.callbackify(doc.UpdateItem)
+      update({
         TableName,
         Key: getKey({ table, key }),
         UpdateExpression: `SET ${prop} = if_not_exists(${prop}, :zero) ${isIncr ? '+' : '-'} :val`,

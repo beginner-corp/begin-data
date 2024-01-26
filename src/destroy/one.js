@@ -2,10 +2,11 @@
  * @private
  * @module destroy/one
  */
+let util = require('util')
 let waterfall = require('run-waterfall')
 let getTableName = require('../helpers/_get-table-name')
 let getKey = require('../helpers/_get-key')
-let dynamo = require('../helpers/_dynamo').doc
+let dynamo = require('../helpers/_dynamo')
 
 /**
  * Destroy a document
@@ -22,8 +23,9 @@ module.exports = function one (params, callback) {
       })
     },
     function destroys (TableName, doc, callback) {
+      let del = util.callbackify(doc.DeleteItem)
       let Key = getKey(params)
-      doc.delete({
+      del({
         TableName,
         Key,
       }, callback)

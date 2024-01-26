@@ -8,7 +8,8 @@ let createKey = require('../helpers/_create-key')
 let validate = require('../helpers/_validate')
 let unfmt = require('../helpers/_unfmt')
 let fmt = require('../helpers/_fmt')
-let dynamo = require('../helpers/_dynamo').doc
+let dynamo = require('../helpers/_dynamo')
+let util = require('util')
 
 /**
  * Write a document
@@ -37,7 +38,8 @@ module.exports = function one (params, callback) {
     },
     function write (TableName, Item, doc, callback) {
       validate.size(Item)
-      doc.put({
+      let put = util.callbackify(doc.PutItem)
+      put({
         TableName,
         Item
       },

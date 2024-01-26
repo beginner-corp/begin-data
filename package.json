@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint --fix .",
+    "t": "tape test/one.js | tap-spec",
     "test": "npm run lint && tape test/*-test.js | tap-spec",
     "rc": "npm version prerelease --preid RC"
   },
@@ -30,11 +31,10 @@
   },
   "devDependencies": {
     "@architect/eslint-config": "^2.0.1",
-    "@architect/sandbox": "^5.1.0-RC.0",
-    "@aws-sdk/client-dynamodb": "^3.216.0",
-    "@aws-sdk/client-ssm": "^3.216.0",
-    "@aws-sdk/lib-dynamodb": "^3.216.0",
-    "aws-sdk": "^2.1261.0",
+    "@architect/sandbox": "^6.0.0-RC.1",
+    "@aws-lite/client": "^0.14.2",
+    "@aws-lite/dynamodb": "^0.3.1",
+    "@aws-lite/ssm": "^0.2.2",
     "eslint": "^8.10.0",
     "tap-spec": "^5.0.0",
     "tape": "^5.5.2",

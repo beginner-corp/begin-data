@@ -2,10 +2,11 @@
  * @private
  * @module destroy/batch
  */
+let util = require('util')
 let waterfall = require('run-waterfall')
 let getTableName = require('../helpers/_get-table-name')
 let getKey = require('../helpers/_get-key')
-let dynamo = require('../helpers/_dynamo').doc
+let dynamo = require('../helpers/_dynamo')
 
 /**
  * Destroy an array of documents
@@ -33,7 +34,8 @@ module.exports = function batch (params, callback) {
       let batch = params.map(getKey).map(req)
       let query = { RequestItems: {} }
       query.RequestItems[TableName] = batch
-      doc.batchWrite(query, callback)
+      let batchWrite = util.callbackify(doc.BatchWriteItem)
+      batchWrite(query, callback)
     }
   ],
   function destroyed (err) {

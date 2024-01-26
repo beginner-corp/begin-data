@@ -10,7 +10,8 @@ let createKey = require('../helpers/_create-key')
 let validate = require('../helpers/_validate')
 let unfmt = require('../helpers/_unfmt')
 let fmt = require('../helpers/_fmt')
-let dynamo = require('../helpers/_dynamo').doc
+let dynamo = require('../helpers/_dynamo')
+let util = require('util')
 
 /**
  * Write an array of documents
@@ -43,10 +44,11 @@ module.exports = function batch (params, callback) {
     },
     function writeKeys (TableName, items, doc, callback) {
       validate.size(items)
+      let batchWrite = util.callbackify(doc.BatchWriteItem)
       let batch = items.map(Item => ({ PutRequest: { Item } }))
       let query = { RequestItems: {} }
       query.RequestItems[TableName] = batch
-      doc.batchWrite(query, function done (err) {
+      batchWrite(query, function done (err) {
         if (err) callback(err)
         else {
           let clean = item => unfmt(item.PutRequest.Item)

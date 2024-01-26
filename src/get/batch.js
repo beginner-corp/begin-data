@@ -2,11 +2,12 @@
  * @private
  * @module get/batch
  */
+let util = require('util')
 let waterfall = require('run-waterfall')
 let getTableName = require('../helpers/_get-table-name')
 let getKey = require('../helpers/_get-key')
 let unfmt = require('../helpers/_unfmt')
-let dynamo = require('../helpers/_dynamo').doc
+let dynamo = require('../helpers/_dynamo')
 
 let badKey = i => !(i['table'] && i['key'])
 
@@ -39,9 +40,10 @@ module.exports = function batch (Keys, callback) {
         })
       },
       function gets (table, doc, callback) {
+        let batchGet = util.callbackify(doc.BatchGetItem)
         let query = { RequestItems: {} }
         query.RequestItems[table] = { Keys: Keys.map(getKey) }
-        doc.batchGet(query, function gots (err, result) {
+        batchGet(query, function gots (err, result) {
           if (err) callback(err)
           else {
             callback(null, result.Responses[table].map(unfmt))
