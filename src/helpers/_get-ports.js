@@ -39,9 +39,10 @@ module.exports = function getPorts (callback) {
       region: AWS_REGION || 'us-west-2',
     }
 
-    aws(config, function gotClient (err, { ssm }) {
+    aws(config, function gotClient (err, client) {
       if (err) callback(err)
       else {
+        let { ssm } = client
         let getParameter = util.callbackify(ssm.GetParameter)
         getParameter({ Name }, function done (err, result) {
           if (err) callback(err)

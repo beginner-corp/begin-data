@@ -37,10 +37,10 @@ module.exports = function getDynamo (callback) {
           port,
           region: AWS_REGION || 'us-west-2'
         },
-        function gotClient (err, { dynamodb }) {
+        function gotClient (err, client) {
           if (err) callback(err)
           else {
-            db = dynamodb
+            db = client.dynamodb
             callback(null, db)
           }
         })

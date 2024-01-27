@@ -4,6 +4,8 @@ let test = require('tape')
 
 test('start sandbox', async t => {
   t.plan(1)
+  process.env.AWS_ACCESS_KEY_ID = 'arc_dummy_access_key',
+  process.env.AWS_SECRET_ACCESS_KEY = 'arc_dummy_secret_key',
   await sandbox.start({ quiet: true, cwd: __dirname })
   t.pass('sandbox.start')
 })
@@ -28,6 +30,8 @@ test('tables with similar namespacing', async t => {
 
 test('shutdown sandbox', async t => {
   t.plan(1)
+  delete process.env.AWS_ACCESS_KEY_ID
+  delete process.env.AWS_SECRET_ACCESS_KEY
   await sandbox.end()
   t.pass('sandbox.end')
 })
