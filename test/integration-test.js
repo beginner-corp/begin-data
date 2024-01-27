@@ -17,7 +17,7 @@ test('Start sandbox', async t => {
   await sandbox.start({ cwd: __dirname, quiet: true })
   t.pass('started')
 })
-  /*
+
 test('get a key that does not exist returns null', async t => {
   t.plan(1)
   let result = await data.get({ table: 'foo', key: 'nooo' })
@@ -134,9 +134,9 @@ test('incr/decr', async t => {
   t.ok(decrRes.scopeID === undefined, 'decrRes.scopeID is undefined')
   t.ok(decrRes.dataID === undefined, 'decrRes.dataID is undefined')
 })
-  */
+
 test('Node 8+ cursor style pagination', async t => {
-  t.plan(2)
+  t.plan(4)
 
   // add 100 ppl (25 at a time)
   console.time('add 100 ppl')
@@ -158,15 +158,13 @@ test('Node 8+ cursor style pagination', async t => {
   let result = await data.get({ table, limit: 100 })
   t.ok(result.length === 100, 'got the first 100 ppl')
   t.ok(result.cursor, `got cursor ${result.cursor}`)
-  console.log(result)
 
   // get the last two
   let result2 = await data.get({ table, cursor: result.cursor })
-  console.log(result2)
-  //t.ok(result2.length === 2, 'got last two ppl')
-  //t.ok(typeof result2.cursor === 'undefined', 'and no cursor')
+  t.ok(result2.length === 2, 'got last two ppl')
+  t.ok(typeof result2.cursor === 'undefined', 'and no cursor')
 })
-/*
+
 test('implementing a scan', t => {
   t.plan(1)
 
@@ -252,7 +250,7 @@ test('paginate ten at a time', async t => {
   t.ok(count === 5, 'counted five pages (102 records at 25 per page)')
   console.log(count)
 })
-*/
+
 // fin
 test('shutdown sandbox', async t => {
   t.plan(1)

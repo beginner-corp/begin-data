@@ -55,9 +55,6 @@ module.exports = function page (params, callback) {
       }
       if (params.cursor) {
         query.ExclusiveStartKey = JSON.parse(Buffer.from(params.cursor, 'base64').toString('utf8'))
-        //console.log('received =======>', query.ExclusiveStartKey)
-        // query.ExclusiveStartKey.scopeID = {S: query.ExclusiveStartKey.scopeID}
-        //query.ExclusiveStartKey.dataID = {S: query.ExclusiveStartKey.dataID}
       }
       let runQuery = util.callbackify(doc.Query)
       runQuery(query, callback)
@@ -69,7 +66,6 @@ module.exports = function page (params, callback) {
       let exact = item => item.table === params.table
       let returns = result.Items.map(unfmt).filter(exact)
       if (result.LastEvaluatedKey) {
-        // console.log('sending =======>', result.LastEvaluatedKey)
         returns.cursor = Buffer.from(JSON.stringify(result.LastEvaluatedKey)).toString('base64')
       }
       callback(null, returns)
