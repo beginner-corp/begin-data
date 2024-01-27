@@ -25,20 +25,20 @@
     "src/*"
   ],
   "dependencies": {
+    "@aws-lite/client": "^0.14.3",
+    "@aws-lite/dynamodb": "^0.3.2",
+    "@aws-lite/ssm": "^0.2.2",
     "@begin/hashid": "^1.0.0",
     "run-parallel": "^1.2.0",
     "run-waterfall": "^1.1.7"
   },
   "devDependencies": {
-    "@architect/eslint-config": "^2.0.1",
+    "@architect/eslint-config": "^2.1.2",
     "@architect/sandbox": "^6.0.0-RC.1",
-    "@aws-lite/client": "^0.14.2",
-    "@aws-lite/dynamodb": "^0.3.1",
-    "@aws-lite/ssm": "^0.2.2",
-    "eslint": "^8.10.0",
+    "eslint": "^8.56.0",
     "tap-spec": "^5.0.0",
-    "tape": "^5.5.2",
-    "tiny-json-http": "^7.3.1"
+    "tape": "^5.7.4",
+    "tiny-json-http": "^7.5.1"
   },
   "eslintConfig": {
     "extends": "@architect/eslint-config",
