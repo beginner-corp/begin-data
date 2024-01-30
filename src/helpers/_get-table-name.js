@@ -31,11 +31,7 @@ module.exports = function getTableName (callback) {
     getPorts((err, ports) => {
       if (err) callback(err)
       else go({
-        protocol: 'http',
-        host: 'localhost',
-        port: ports._arc,
-        endpointPrefix: '_arc/ssm',
-        // endpoint: `http://localhost:${ports._arc}/_arc/ssm`,
+        endpoint: `http://localhost:${ports._arc}/_arc/ssm`,
         region: AWS_REGION || 'us-west-2',
       })
     })

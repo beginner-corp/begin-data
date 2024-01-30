@@ -31,11 +31,7 @@ module.exports = function getPorts (callback) {
     }
     let Name = `/${toLogicalID(`${app}-${env}`)}/ARC_SANDBOX/ports`
     let config = {
-      protocol: 'http',
-      host: 'localhost',
-      port: 2222,
-      endpointPrefix: '_arc/ssm',
-      // endpoint: `http://localhost:${port}/_arc/ssm`,
+      endpoint: `http://localhost:2222/_arc/ssm`,
       region: AWS_REGION || 'us-west-2',
     }
 
