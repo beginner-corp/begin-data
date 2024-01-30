@@ -1,7 +1,7 @@
 name: Node CI
 
 # Push tests commits; pull_request tests PR merges
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
 
@@ -17,10 +17,10 @@ jobs:
     # Go
     steps:
     - name: Check out repo
-      uses: actions/checkout@v1
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -39,16 +39,15 @@ jobs:
     - name: Test
       run: npm test
 
-    - name: Notify
-      uses: homoluctus/slatify@master
-      # Only fire alert once
-      if: github.ref == 'refs/heads/master' && failure() && matrix.node-version == '20.x' && matrix.os == 'ubuntu-latest'
-      with:
-        type: ${{ job.status }}
-        job_name: '*Build*'
-        url: ${{ secrets.SLACK_WEBHOOK }}
-        commit: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Notify
+    #   uses: sarisia/actions-status-discord@v1
+    #   # Only fire alert once
+    #   if: github.ref == 'refs/heads/main' && failure() && matrix.node-version == '20.x' && matrix.os == 'ubuntu-latest'
+    #   with:
+    #     webhook: ${{ secrets.DISCORD_WEBHOOK }}
+    #     title: "build and test"
+    #     color: 0x222222
+    #     username: GitHub Actions
 
   # ----- Only git tag testing + package publishing beyond this point ----- #
 
@@ -62,16 +61,13 @@ jobs:
     # Go
     steps:
       - name: Check out repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org/
-
-      - name: Install
-        run: npm i
 
       # Publish to npm
       - name: Publish @RC to npm
@@ -86,35 +82,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Set up Node again, this time using GitHub as the publish target
-      - uses: actions/setup-node@v1
-        with:
-          node-version: lts/*
-          registry-url: https://npm.pkg.github.com/
-
-      # Change package org (@smallwins on GitHub vs @begin on NPM)
-      - name: Change package name
-        run: scripts/change-package-name @beginner-corp/data
-
-      # Publish to GitHub
-      - name: Publish @RC to GitHub
-        if: contains(github.ref, 'RC')
-        run: npm publish --tag RC
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish @latest to GitHub
-        if: contains(github.ref, 'RC') == false #'!contains()'' doesn't work lol
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Notify
-        uses: homoluctus/slatify@master
-        if: always()
-        with:
-          type: ${{ job.status }}
-          job_name: '*Publish*'
-          url: ${{ secrets.SLACK_WEBHOOK }}
-          commit: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Notify
+      #   uses: sarisia/actions-status-discord@v1
+      #   if: always()
+      #   with:
+      #     webhook: ${{ secrets.DISCORD_WEBHOOK }}
+      #     title: "npm publish"
+      #     color: 0x222222
+      #     username: GitHub Actions
