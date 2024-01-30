@@ -15,10 +15,10 @@ module.exports = function getDynamo (callback) {
 
   let local = ARC_ENV === 'testing' || ARC_LOCAL
   if (!local) {
-    aws(function gotClient (err, { ddb }) {
+    aws(function gotClient (err, client) {
       if (err) callback(err)
       else {
-        db = ddb
+        db = client.dynamodb
         callback(null, db)
       }
     })
