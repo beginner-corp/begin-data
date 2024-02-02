@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@architect/eslint-config": "^2.0.1",
-    "@architect/sandbox": "^5.1.0-RC.0",
+    "@architect/sandbox": "^6.0.0",
     "@aws-sdk/client-dynamodb": "^3.216.0",
     "@aws-sdk/client-ssm": "^3.216.0",
     "@aws-sdk/lib-dynamodb": "^3.216.0",
