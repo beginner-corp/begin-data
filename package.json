@@ -25,7 +25,7 @@
     "src/*"
   ],
   "dependencies": {
-    "@aws-lite/client": "^0.16.0",
+    "@aws-lite/client": "^0.16.1",
     "@aws-lite/dynamodb": "^0.3.3",
     "@aws-lite/ssm": "^0.2.2",
     "@begin/hashid": "^1.0.0",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@architect/eslint-config": "^2.1.2",
-    "@architect/sandbox": "^6.0.0",
+    "@architect/sandbox": "^6.0.1",
     "eslint": "^8.56.0",
     "tap-spec": "^5.0.0",
     "tape": "^5.7.4",
