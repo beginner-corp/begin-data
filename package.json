@@ -25,7 +25,7 @@
     "src/*"
   ],
   "dependencies": {
-    "@aws-lite/client": "^0.16.1",
+    "@aws-lite/client": "^0.17.1",
     "@aws-lite/dynamodb": "^0.3.3",
     "@aws-lite/ssm": "^0.2.2",
     "@begin/hashid": "^1.0.0",
