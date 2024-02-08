@@ -15,10 +15,11 @@ module.exports = function getDynamo (callback) {
 
   let local = ARC_ENV === 'testing' || ARC_LOCAL
   if (!local) {
-    aws(function gotClient (err, client) {
+    let plugins = [ import('@aws-lite/dynamodb') ]
+    aws({ plugins }, function gotClient (err, client) {
       if (err) callback(err)
       else {
-        db = client.dynamodb
+        db = client.ddb
         callback(null, db)
       }
     })
@@ -35,6 +36,7 @@ module.exports = function getDynamo (callback) {
           protocol: 'http',
           host: 'localhost',
           port,
+          plugins: [ import('@aws-lite/dynamodb') ],
           region: AWS_REGION || 'us-west-2'
         },
         function gotClient (err, client) {

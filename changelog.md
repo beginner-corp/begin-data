@@ -2,6 +2,12 @@
 
 ---
 
+## [5.0.2] 2024-02-08
+
+Upgraded to new explicit plugin resolution with [aws-lite](https://aws-lite.org)!
+
+---
+
 ## [5.0.0 - 5.0.1] 2024-02-03
 
 Begin Data just got a lot faster. Gone are the days of 500-1000ms cold starts due to instantiating the AWS SDK – Begin Data v5 is now between 2-5x faster, and uses 2-4x less memory, courtesy of [aws-lite](https://aws-lite.org)!
