@@ -34,8 +34,7 @@ module.exports = function getTableName (callback) {
         protocol: 'http',
         host: 'localhost',
         port: ports._arc,
-        endpointPrefix: '_arc/ssm',
-        // endpoint: `http://localhost:${ports._arc}/_arc/ssm`,
+        pathPrefix: '_arc/ssm',
         region: AWS_REGION || 'us-west-2',
       })
     })
@@ -44,8 +43,9 @@ module.exports = function getTableName (callback) {
     go()
   }
 
-  function go (config) {
-    aws(config, function gotClient (err, client) {
+  function go (config = {}) {
+    let plugins = [ import('@aws-lite/ssm') ]
+    aws({ plugins, ...config }, function gotClient (err, client) {
       if (err) callback(err)
       else {
         let { ssm } = client
