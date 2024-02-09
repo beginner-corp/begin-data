@@ -19,7 +19,7 @@ module.exports = function getDynamo (callback) {
     aws({ plugins }, function gotClient (err, client) {
       if (err) callback(err)
       else {
-        db = client.ddb
+        db = client.dynamodb
         callback(null, db)
       }
     })
