@@ -35,7 +35,7 @@
   "devDependencies": {
     "@architect/eslint-config": "^2.1.2",
     "@architect/sandbox": "^6.0.1",
-    "eslint": "^8.56.0",
+    "eslint": "^9.1.1",
     "tap-spec": "^5.0.0",
     "tape": "^5.7.4",
     "tiny-json-http": "^7.5.1"
