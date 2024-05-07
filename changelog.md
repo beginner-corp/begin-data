@@ -2,6 +2,14 @@
 
 ---
 
+## [5.0.3] 2024-05-07
+
+### Changed
+
+- Updated dependencies
+
+---
+
 ## [5.0.2] 2024-02-08
 
 Upgraded to new explicit plugin resolution with [aws-lite](https://aws-lite.org)!
