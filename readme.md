@@ -54,6 +54,27 @@ Resources:
 
 > Note: projects not based on [Architect](https://arc.codes) will need a `BEGIN_DATA_TABLE_NAME` environment variable. You can also use this env var to override and name the table anything you want. This also allows for multiple apps to share a single table.
 
+## Usage alongside Enhance
+
+The plugin `@enhance/arc-plugin-enhance` includes `@begin/data` by default so if you are converting an Architect project to an Enhance project you can remove the tables pragma from your app.arc file.
+
+Example `app.arc`:
+
+```
+@app
+myapp
+
+@plugins
+enhance/arc-plugin-enhance
+
+# The following lines are safe to delete
+# @tables
+# data
+#   scopeID *String
+#   dataID **String
+#   ttl TTL
+```
+
 ### API
 
 ```javascript
@@ -152,7 +173,7 @@ In this case use the `for await` syntax with a limit set to get paginated data.
 
 ```javascript
 let pages = data.page({ table:'ppl', limit:25 })
-let count = 0  
+let count = 0
 for await (let page of pages) {
   console.log(page)
   count++
